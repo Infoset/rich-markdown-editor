@@ -1,22 +1,22 @@
-import * as React from "react";
-import { setTextSelection } from "prosemirror-utils";
-import { EditorView } from "prosemirror-view";
-import { Mark } from "prosemirror-model";
+import * as React from 'react';
+import { setTextSelection } from 'prosemirror-utils';
+import { EditorView } from 'prosemirror-view';
+import { Mark } from 'prosemirror-model';
 import {
   DocumentIcon,
   CloseIcon,
   PlusIcon,
   TrashIcon,
   OpenIcon,
-} from "outline-icons";
-import styled, { withTheme } from "styled-components";
-import isUrl from "../lib/isUrl";
-import theme from "../theme";
-import Flex from "./Flex";
-import Input from "./Input";
-import ToolbarButton from "./ToolbarButton";
-import LinkSearchResult from "./LinkSearchResult";
-import baseDictionary from "../dictionary";
+} from 'outline-icons';
+import styled, { withTheme } from 'styled-components';
+import isUrl from '../lib/isUrl';
+import theme from '../theme';
+import Flex from './Flex';
+import Input from './Input';
+import ToolbarButton from './ToolbarButton';
+import LinkSearchResult from './LinkSearchResult';
+import baseDictionary from '../dictionary';
 
 export type SearchResult = {
   title: string;
@@ -62,12 +62,12 @@ class LinkEditor extends React.Component<Props, State> {
   state: State = {
     selectedIndex: -1,
     value: this.href,
-    previousValue: "",
+    previousValue: '',
     results: {},
   };
 
   get href(): string {
-    return this.props.mark ? this.props.mark.attrs.href : "";
+    return this.props.mark ? this.props.mark.attrs.href : '';
   }
 
   get suggestedLinkTitle(): string {
@@ -93,7 +93,7 @@ class LinkEditor extends React.Component<Props, State> {
     }
 
     // If the link is totally empty or only spaces then remove the mark
-    const href = (this.state.value || "").trim();
+    const href = (this.state.value || '').trim();
     if (!href) {
       return this.handleRemoveLink();
     }
@@ -111,7 +111,7 @@ class LinkEditor extends React.Component<Props, State> {
 
     // If the input doesn't start with a protocol or relative slash, make sure
     // a protocol is added to the beginning
-    if (!isUrl(href) && !href.startsWith("/") && !href.startsWith("#")) {
+    if (!isUrl(href) && !href.startsWith('/') && !href.startsWith('#')) {
       href = `https://${href}`;
     }
 
@@ -120,7 +120,7 @@ class LinkEditor extends React.Component<Props, State> {
 
   handleKeyDown = (event: React.KeyboardEvent): void => {
     switch (event.key) {
-      case "Enter": {
+      case 'Enter': {
         event.preventDefault();
         const { selectedIndex, value } = this.state;
         const results = this.state.results[value] || [];
@@ -145,7 +145,7 @@ class LinkEditor extends React.Component<Props, State> {
         return;
       }
 
-      case "Escape": {
+      case 'Escape': {
         event.preventDefault();
 
         if (this.initialValue) {
@@ -156,7 +156,7 @@ class LinkEditor extends React.Component<Props, State> {
         return;
       }
 
-      case "ArrowUp": {
+      case 'ArrowUp': {
         if (event.shiftKey) return;
         event.preventDefault();
         event.stopPropagation();
@@ -168,9 +168,9 @@ class LinkEditor extends React.Component<Props, State> {
         return;
       }
 
-      case "ArrowDown":
+      case 'ArrowDown':
         if (event.shiftKey) return;
-      case "Tab": {
+      case 'Tab': {
         event.preventDefault();
         event.stopPropagation();
         const { selectedIndex, value } = this.state;
@@ -302,7 +302,7 @@ class LinkEditor extends React.Component<Props, State> {
           onKeyDown={this.handleKeyDown}
           onPaste={this.handlePaste}
           onChange={this.handleChange}
-          autoFocus={this.href === ""}
+          autoFocus={this.href === ''}
         />
 
         <ToolbarButton onClick={this.handleOpenLink} disabled={!value}>

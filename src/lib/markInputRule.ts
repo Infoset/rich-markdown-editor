@@ -1,6 +1,6 @@
-import { MarkType, Mark } from "prosemirror-model";
-import { InputRule } from "prosemirror-inputrules";
-import { EditorState } from "prosemirror-state";
+import { MarkType, Mark } from 'prosemirror-model';
+import { InputRule } from 'prosemirror-inputrules';
+import { EditorState } from 'prosemirror-state';
 
 function getMarksBetween(start: number, end: number, state: EditorState) {
   let marks: { start: number; end: number; mark: Mark }[] = [];
@@ -19,7 +19,7 @@ function getMarksBetween(start: number, end: number, state: EditorState) {
   return marks;
 }
 
-export default function(
+export default function (
   regexp: RegExp,
   markType: MarkType,
   getAttrs?: (match) => Record<string, unknown>

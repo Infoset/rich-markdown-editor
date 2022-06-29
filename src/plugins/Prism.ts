@@ -1,28 +1,29 @@
-import refractor from "refractor/core";
-import flattenDeep from "lodash/flattenDeep";
-import { Plugin, PluginKey } from "prosemirror-state";
-import { Node } from "prosemirror-model";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import { findBlockNodes } from "prosemirror-utils";
+import flattenDeep from 'lodash/flattenDeep';
+import { Node } from 'prosemirror-model';
+import { Plugin, PluginKey } from 'prosemirror-state';
+import { findBlockNodes } from 'prosemirror-utils';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { RefractorElement, Text } from 'refractor';
+import { refractor } from 'refractor/lib/core';
 
 export const LANGUAGES = {
-  none: "None", // additional entry to disable highlighting
-  bash: "Bash",
-  css: "CSS",
-  clike: "C",
-  csharp: "C#",
-  go: "Go",
-  markup: "HTML",
-  java: "Java",
-  javascript: "JavaScript",
-  json: "JSON",
-  php: "PHP",
-  powershell: "Powershell",
-  python: "Python",
-  ruby: "Ruby",
-  sql: "SQL",
-  typescript: "TypeScript",
-  yaml: "YAML",
+  none: 'None', // additional entry to disable highlighting
+  bash: 'Bash',
+  css: 'CSS',
+  clike: 'C',
+  csharp: 'C#',
+  go: 'Go',
+  markup: 'HTML',
+  java: 'Java',
+  javascript: 'JavaScript',
+  json: 'JSON',
+  php: 'PHP',
+  powershell: 'Powershell',
+  python: 'Python',
+  ruby: 'Ruby',
+  sql: 'SQL',
+  typescript: 'TypeScript',
+  yaml: 'YAML',
 };
 
 type ParsedNode = {
@@ -39,12 +40,14 @@ function getDecorations({ doc, name }: { doc: Node; name: string }) {
   );
 
   function parseNodes(
-    nodes: refractor.RefractorNode[],
+    nodes: (RefractorElement | Text)[],
     classNames: string[] = []
   ): any {
     return nodes.map(node => {
-      if (node.type === "element") {
-        const classes = [...classNames, ...(node.properties.className || [])];
+      if (node.type === 'element') {
+        const classes = Array.isArray(node.properties?.className)
+          ? [...classNames, ...(node.properties?.className.map(String) || [])]
+          : [...classNames];
         return parseNodes(node.children, classes);
       }
 
@@ -58,13 +61,13 @@ function getDecorations({ doc, name }: { doc: Node; name: string }) {
   blocks.forEach(block => {
     let startPos = block.pos + 1;
     const language = block.node.attrs.language;
-    if (!language || language === "none" || !refractor.registered(language)) {
+    if (!language || language === 'none' || !refractor.registered(language)) {
       return;
     }
 
     if (!cache[block.pos] || !cache[block.pos].node.eq(block.node)) {
-      const nodes = refractor.highlight(block.node.textContent, language);
-      const _decorations = flattenDeep(parseNodes(nodes))
+      const root = refractor.highlight(block.node.textContent, language);
+      const _decorations = flattenDeep(parseNodes(root.children))
         .map((node: ParsedNode) => {
           const from = startPos;
           const to = from + node.text.length;
@@ -80,7 +83,7 @@ function getDecorations({ doc, name }: { doc: Node; name: string }) {
         .filter(node => node.classes && node.classes.length)
         .map(node =>
           Decoration.inline(node.from, node.to, {
-            class: node.classes.join(" "),
+            class: node.classes.join(' '),
           })
         );
 
@@ -107,9 +110,9 @@ export default function Prism({ name }) {
   let highlighted = false;
 
   return new Plugin({
-    key: new PluginKey("prism"),
+    key: new PluginKey('prism'),
     state: {
-      init: (_: Plugin, { doc }) => {
+      init: (_, { doc }) => {
         return DecorationSet.create(doc, []);
       },
       apply: (transaction, decorationSet, oldState, state) => {
@@ -133,7 +136,7 @@ export default function Prism({ name }) {
         // it render un-highlighted and then trigger a defered render of Prism
         // by updating the plugins metadata
         setTimeout(() => {
-          view.dispatch(view.state.tr.setMeta("prism", { loaded: true }));
+          view.dispatch(view.state.tr.setMeta('prism', { loaded: true }));
         }, 10);
       }
       return {};

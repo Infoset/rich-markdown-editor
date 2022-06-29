@@ -1,6 +1,6 @@
-import * as React from "react";
-import scrollIntoView from "smooth-scroll-into-view-if-needed";
-import styled from "styled-components";
+import * as React from 'react';
+import scrollIntoView from 'smooth-scroll-into-view-if-needed';
+import styled from 'styled-components';
 
 type Props = {
   onClick: (event: React.MouseEvent) => void;
@@ -16,13 +16,13 @@ function LinkSearchResult({ title, subtitle, selected, icon, ...rest }: Props) {
     node => {
       if (selected && node) {
         scrollIntoView(node, {
-          scrollMode: "if-needed",
-          block: "center",
+          scrollMode: 'if-needed',
+          block: 'center',
           boundary: parent => {
             // All the parent elements of your target are checked until they
             // reach the #link-search-results. Prevents body and other parent
             // elements from being scrolled
-            return parent.id !== "link-search-results";
+            return parent.id !== 'link-search-results';
           },
         });
       }
@@ -57,15 +57,15 @@ const ListItem = styled.li<{
   border-radius: 2px;
   color: ${props => props.theme.toolbarItem};
   background: ${props =>
-    props.selected ? props.theme.toolbarHoverBackground : "transparent"};
+    props.selected ? props.theme.toolbarHoverBackground : 'transparent'};
   font-family: ${props => props.theme.fontFamily};
   text-decoration: none;
   overflow: hidden;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
-  line-height: ${props => (props.compact ? "inherit" : "1.2")};
-  height: ${props => (props.compact ? "28px" : "auto")};
+  line-height: ${props => (props.compact ? 'inherit' : '1.2')};
+  height: ${props => (props.compact ? '28px' : 'auto')};
 `;
 
 const Title = styled.div`

@@ -5,7 +5,7 @@ export default function isUrl(text: string) {
 
   try {
     const url = new URL(text);
-    return url.hostname !== "";
+    return url.hostname !== '';
   } catch (err) {
     return false;
   }

@@ -4,11 +4,11 @@ import {
   AlignImageLeftIcon,
   AlignImageRightIcon,
   AlignImageCenterIcon,
-} from "outline-icons";
-import isNodeActive from "../queries/isNodeActive";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
-import { EditorState } from "prosemirror-state";
+} from 'outline-icons';
+import isNodeActive from '../queries/isNodeActive';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
+import { EditorState } from 'prosemirror-state';
 
 export default function imageMenuItems(
   state: EditorState,
@@ -16,22 +16,22 @@ export default function imageMenuItems(
 ): MenuItem[] {
   const { schema } = state;
   const isLeftAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "left-50",
+    layoutClass: 'left-50',
   });
   const isRightAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "right-50",
+    layoutClass: 'right-50',
   });
 
   return [
     {
-      name: "alignLeft",
+      name: 'alignLeft',
       tooltip: dictionary.alignLeft,
       icon: AlignImageLeftIcon,
       visible: true,
       active: isLeftAligned,
     },
     {
-      name: "alignCenter",
+      name: 'alignCenter',
       tooltip: dictionary.alignCenter,
       icon: AlignImageCenterIcon,
       visible: true,
@@ -41,25 +41,25 @@ export default function imageMenuItems(
         !isRightAligned(state),
     },
     {
-      name: "alignRight",
+      name: 'alignRight',
       tooltip: dictionary.alignRight,
       icon: AlignImageRightIcon,
       visible: true,
       active: isRightAligned,
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: true,
     },
     {
-      name: "downloadImage",
+      name: 'downloadImage',
       tooltip: dictionary.downloadImage,
       icon: DownloadIcon,
       visible: !!fetch,
       active: () => false,
     },
     {
-      name: "deleteImage",
+      name: 'deleteImage',
       tooltip: dictionary.deleteImage,
       icon: TrashIcon,
       visible: true,

@@ -1,6 +1,6 @@
-import { Node as PMNode, Mark } from "prosemirror-model";
-import { EditorState } from "prosemirror-state";
-import Node from "../nodes/Node";
+import { Node as PMNode, Mark } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+import Node from '../nodes/Node';
 
 export default function getMarkAttrs(state: EditorState, type: Node) {
   const { from, to } = state.selection;

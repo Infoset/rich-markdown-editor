@@ -17,8 +17,8 @@ limitations under the License.
 // This file is based on the implementation found here:
 // https://bitbucket.org/atlassian/design-system-mirror/src/master/editor/editor-core/src/plugins/text-formatting/commands/text-formatting.ts
 
-import { EditorState, Transaction, TextSelection } from "prosemirror-state";
-import isMarkActive from "../queries/isMarkActive";
+import { EditorState, Transaction, TextSelection } from 'prosemirror-state';
+import isMarkActive from '../queries/isMarkActive';
 
 export default function moveRight() {
   return (state: EditorState, dispatch: (tr: Transaction) => void): boolean => {

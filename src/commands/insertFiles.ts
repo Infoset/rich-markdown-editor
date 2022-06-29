@@ -1,9 +1,9 @@
 import uploadPlaceholderPlugin, {
   findPlaceholder,
-} from "../lib/uploadPlaceholder";
-import { ToastType } from "../types";
+} from '../lib/uploadPlaceholder';
+import { ToastType } from '../types';
 
-const insertFiles = function(view, event, pos, files, options) {
+const insertFiles = function (view, event, pos, files, options) {
   // filter to only include image files
   const images = files.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;
@@ -18,7 +18,7 @@ const insertFiles = function(view, event, pos, files, options) {
 
   if (!uploadImage) {
     console.warn(
-      "uploadImage callback must be defined to handle image uploads."
+      'uploadImage callback must be defined to handle image uploads.'
     );
     return;
   }

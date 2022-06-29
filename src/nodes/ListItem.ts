@@ -2,33 +2,33 @@ import {
   splitListItem,
   sinkListItem,
   liftListItem,
-} from "prosemirror-schema-list";
+} from 'prosemirror-schema-list';
 import {
   Transaction,
   EditorState,
   Plugin,
   TextSelection,
-} from "prosemirror-state";
-import { DecorationSet, Decoration } from "prosemirror-view";
-import { findParentNodeClosestToPos } from "prosemirror-utils";
+} from 'prosemirror-state';
+import { DecorationSet, Decoration } from 'prosemirror-view';
+import { findParentNodeClosestToPos } from 'prosemirror-utils';
 
-import Node from "./Node";
-import isList from "../queries/isList";
-import isInList from "../queries/isInList";
-import getParentListItem from "../queries/getParentListItem";
+import Node from './Node';
+import isList from '../queries/isList';
+import isInList from '../queries/isInList';
+import getParentListItem from '../queries/getParentListItem';
 
 export default class ListItem extends Node {
   get name() {
-    return "list_item";
+    return 'list_item';
   }
 
   get schema() {
     return {
-      content: "paragraph block*",
+      content: 'paragraph block*',
       defining: true,
       draggable: true,
-      parseDOM: [{ tag: "li" }],
-      toDOM: () => ["li", 0],
+      parseDOM: [{ tag: 'li' }],
+      toDOM: () => ['li', 0],
     };
   }
 
@@ -45,7 +45,7 @@ export default class ListItem extends Node {
             oldState: EditorState,
             newState: EditorState
           ) => {
-            const action = tr.getMeta("li");
+            const action = tr.getMeta('li');
             if (!action && !tr.docChanged) {
               return set;
             }
@@ -54,12 +54,12 @@ export default class ListItem extends Node {
             set = set.map(tr.mapping, tr.doc);
 
             switch (action?.event) {
-              case "mouseover": {
+              case 'mouseover': {
                 const result = findParentNodeClosestToPos(
                   newState.doc.resolve(action.pos),
                   node =>
                     node.type.name === this.name ||
-                    node.type.name === "checkbox_item"
+                    node.type.name === 'checkbox_item'
                 );
 
                 if (!result) {
@@ -106,12 +106,12 @@ export default class ListItem extends Node {
                   ),
                 ]);
               }
-              case "mouseout": {
+              case 'mouseout': {
                 const result = findParentNodeClosestToPos(
                   newState.doc.resolve(action.pos),
                   node =>
                     node.type.name === this.name ||
-                    node.type.name === "checkbox_item"
+                    node.type.name === 'checkbox_item'
                 );
 
                 if (!result) {
@@ -140,7 +140,7 @@ export default class ListItem extends Node {
             mouseover: (view, event) => {
               const { state, dispatch } = view;
               const target = event.target as HTMLElement;
-              const li = target?.closest("li");
+              const li = target?.closest('li');
 
               if (!li) {
                 return false;
@@ -154,8 +154,8 @@ export default class ListItem extends Node {
               }
 
               dispatch(
-                state.tr.setMeta("li", {
-                  event: "mouseover",
+                state.tr.setMeta('li', {
+                  event: 'mouseover',
                   pos,
                 })
               );
@@ -164,7 +164,7 @@ export default class ListItem extends Node {
             mouseout: (view, event) => {
               const { state, dispatch } = view;
               const target = event.target as HTMLElement;
-              const li = target?.closest("li");
+              const li = target?.closest('li');
 
               if (!li) {
                 return false;
@@ -178,8 +178,8 @@ export default class ListItem extends Node {
               }
 
               dispatch(
-                state.tr.setMeta("li", {
-                  event: "mouseout",
+                state.tr.setMeta('li', {
+                  event: 'mouseout',
                   pos,
                 })
               );
@@ -195,10 +195,10 @@ export default class ListItem extends Node {
     return {
       Enter: splitListItem(type),
       Tab: sinkListItem(type),
-      "Shift-Tab": liftListItem(type),
-      "Mod-]": sinkListItem(type),
-      "Mod-[": liftListItem(type),
-      "Shift-Enter": (state, dispatch) => {
+      'Shift-Tab': liftListItem(type),
+      'Mod-]': sinkListItem(type),
+      'Mod-[': liftListItem(type),
+      'Shift-Enter': (state, dispatch) => {
         if (!isInList(state)) return false;
         if (!state.selection.empty) return false;
 
@@ -206,7 +206,7 @@ export default class ListItem extends Node {
         dispatch(tr.split(selection.to));
         return true;
       },
-      "Alt-ArrowUp": (state, dispatch) => {
+      'Alt-ArrowUp': (state, dispatch) => {
         if (!state.selection.empty) return false;
         const result = getParentListItem(state);
         if (!result) return false;
@@ -216,9 +216,9 @@ export default class ListItem extends Node {
 
         if (
           !$pos.nodeBefore ||
-          !["list_item", "checkbox_item"].includes($pos.nodeBefore.type.name)
+          !['list_item', 'checkbox_item'].includes($pos.nodeBefore.type.name)
         ) {
-          console.log("Node before not a list item");
+          console.log('Node before not a list item');
           return false;
         }
 
@@ -233,7 +233,7 @@ export default class ListItem extends Node {
         );
         return true;
       },
-      "Alt-ArrowDown": (state, dispatch) => {
+      'Alt-ArrowDown': (state, dispatch) => {
         if (!state.selection.empty) return false;
         const result = getParentListItem(state);
         if (!result) return false;
@@ -243,9 +243,9 @@ export default class ListItem extends Node {
 
         if (
           !$pos.nodeAfter ||
-          !["list_item", "checkbox_item"].includes($pos.nodeAfter.type.name)
+          !['list_item', 'checkbox_item'].includes($pos.nodeAfter.type.name)
         ) {
-          console.log("Node after not a list item");
+          console.log('Node after not a list item');
           return false;
         }
 
@@ -268,6 +268,6 @@ export default class ListItem extends Node {
   }
 
   parseMarkdown() {
-    return { block: "list_item" };
+    return { block: 'list_item' };
   }
 }

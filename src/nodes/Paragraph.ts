@@ -1,23 +1,23 @@
-import { setBlockType } from "prosemirror-commands";
-import Node from "./Node";
+import { setBlockType } from 'prosemirror-commands';
+import Node from './Node';
 
 export default class Paragraph extends Node {
   get name() {
-    return "paragraph";
+    return 'paragraph';
   }
 
   get schema() {
     return {
-      content: "inline*",
-      group: "block",
-      parseDOM: [{ tag: "p" }],
-      toDOM: () => ["p", 0],
+      content: 'inline*',
+      group: 'block',
+      parseDOM: [{ tag: 'p' }],
+      toDOM: () => ['p', 0],
     };
   }
 
   keys({ type }) {
     return {
-      "Shift-Ctrl-0": setBlockType(type),
+      'Shift-Ctrl-0': setBlockType(type),
     };
   }
 
@@ -29,11 +29,11 @@ export default class Paragraph extends Node {
     // render empty paragraphs as hard breaks to ensure that newlines are
     // persisted between reloads (this breaks from markdown tradition)
     if (
-      node.textContent.trim() === "" &&
+      node.textContent.trim() === '' &&
       node.childCount === 0 &&
       !state.inTable
     ) {
-      state.write("\\\n");
+      state.write('\\\n');
     } else {
       state.renderInline(node);
       state.closeBlock(node);
@@ -41,6 +41,6 @@ export default class Paragraph extends Node {
   }
 
   parseMarkdown() {
-    return { block: "paragraph" };
+    return { block: 'paragraph' };
   }
 }

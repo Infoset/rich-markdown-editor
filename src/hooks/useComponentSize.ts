@@ -1,9 +1,10 @@
-import ResizeObserver from "resize-observer-polyfill";
-import { useState, useEffect } from "react";
+import ResizeObserver from 'resize-observer-polyfill';
+import { useState, useEffect } from 'react';
 
-export default function useComponentSize(
-  ref
-): { width: number; height: number } {
+export default function useComponentSize(ref): {
+  width: number;
+  height: number;
+} {
   const [size, setSize] = useState({
     width: 0,
     height: 0,

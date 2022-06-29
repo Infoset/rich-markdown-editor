@@ -1,6 +1,6 @@
-import "prosemirror-model";
+import 'prosemirror-model';
 
-declare module "prosemirror-model" {
+declare module 'prosemirror-model' {
   interface Slice {
     // this method is missing in the DefinitelyTyped type definition, so we
     // must patch it here.

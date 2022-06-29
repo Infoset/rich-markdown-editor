@@ -1,10 +1,10 @@
-import * as React from "react";
-import { EditorView } from "prosemirror-view";
-import styled, { withTheme } from "styled-components";
-import ToolbarButton from "./ToolbarButton";
-import ToolbarSeparator from "./ToolbarSeparator";
-import theme from "../theme";
-import { MenuItem } from "../types";
+import * as React from 'react';
+import { EditorView } from 'prosemirror-view';
+import styled, { withTheme } from 'styled-components';
+import ToolbarButton from './ToolbarButton';
+import ToolbarSeparator from './ToolbarSeparator';
+import theme from '../theme';
+import { MenuItem } from '../types';
 
 type Props = {
   tooltip: typeof React.Component | React.FC<any>;
@@ -27,7 +27,7 @@ class Menu extends React.Component<Props> {
     return (
       <FlexibleWrapper>
         {items.map((item, index) => {
-          if (item.name === "separator" && item.visible !== false) {
+          if (item.name === 'separator' && item.visible !== false) {
             return <ToolbarSeparator key={index} />;
           }
           if (item.visible === false || !item.icon) {

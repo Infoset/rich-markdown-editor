@@ -1,7 +1,7 @@
 // Adapted from:
 // https://github.com/markdown-it/markdown-it-mark/blob/master/index.js
 
-export default function(options: { delim: string; mark: string }) {
+export default function (options: { delim: string; mark: string }) {
   const delimCharCode = options.delim.charCodeAt(0);
 
   return function emphasisPlugin(md) {
@@ -28,13 +28,13 @@ export default function(options: { delim: string; mark: string }) {
       }
 
       if (len % 2) {
-        token = state.push("text", "", 0);
+        token = state.push('text', '', 0);
         token.content = ch;
         len--;
       }
 
       for (i = 0; i < len; i += 2) {
-        token = state.push("text", "", 0);
+        token = state.push('text', '', 0);
         token.content = ch + ch;
 
         if (!scanned.can_open && !scanned.can_close) {
@@ -78,21 +78,21 @@ export default function(options: { delim: string; mark: string }) {
 
         token = state.tokens[startDelim.token];
         token.type = `${options.mark}_open`;
-        token.tag = "span";
-        token.attrs = [["class", options.mark]];
+        token.tag = 'span';
+        token.attrs = [['class', options.mark]];
         token.nesting = 1;
         token.markup = options.delim;
-        token.content = "";
+        token.content = '';
 
         token = state.tokens[endDelim.token];
         token.type = `${options.mark}_close`;
-        token.tag = "span";
+        token.tag = 'span';
         token.nesting = -1;
         token.markup = options.delim;
-        token.content = "";
+        token.content = '';
 
         if (
-          state.tokens[endDelim.token - 1].type === "text" &&
+          state.tokens[endDelim.token - 1].type === 'text' &&
           state.tokens[endDelim.token - 1].content === options.delim[0]
         ) {
           loneMarkers.push(endDelim.token - 1);
@@ -125,8 +125,8 @@ export default function(options: { delim: string; mark: string }) {
       }
     }
 
-    md.inline.ruler.before("emphasis", options.mark, tokenize);
-    md.inline.ruler2.before("emphasis", options.mark, function(state) {
+    md.inline.ruler.before('emphasis', options.mark, tokenize);
+    md.inline.ruler2.before('emphasis', options.mark, function (state) {
       let curr;
       const tokensMeta = state.tokens_meta,
         max = (state.tokens_meta || []).length;

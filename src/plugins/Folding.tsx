@@ -1,12 +1,12 @@
-import { Plugin } from "prosemirror-state";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import Extension from "../lib/Extension";
-import { findBlockNodes } from "prosemirror-utils";
-import { headingToPersistenceKey } from "../lib/headingToSlug";
+import { Plugin } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import Extension from '../lib/Extension';
+import { findBlockNodes } from 'prosemirror-utils';
+import { headingToPersistenceKey } from '../lib/headingToSlug';
 
 export default class Folding extends Extension {
   get name() {
-    return "folding";
+    return 'folding';
   }
 
   get plugins() {
@@ -16,13 +16,13 @@ export default class Folding extends Extension {
       new Plugin({
         view: view => {
           loaded = false;
-          view.dispatch(view.state.tr.setMeta("folding", { loaded: true }));
+          view.dispatch(view.state.tr.setMeta('folding', { loaded: true }));
           return {};
         },
         appendTransaction: (transactions, oldState, newState) => {
           if (loaded) return;
           if (
-            !transactions.some(transaction => transaction.getMeta("folding"))
+            !transactions.some(transaction => transaction.getMeta('folding'))
           ) {
             return;
           }
@@ -32,14 +32,14 @@ export default class Folding extends Extension {
           const blocks = findBlockNodes(newState.doc);
 
           for (const block of blocks) {
-            if (block.node.type.name === "heading") {
+            if (block.node.type.name === 'heading') {
               const persistKey = headingToPersistenceKey(
                 block.node,
                 this.editor.props.id
               );
               const persistedState = localStorage?.getItem(persistKey);
 
-              if (persistedState === "collapsed") {
+              if (persistedState === 'collapsed') {
                 tr.setNodeMarkup(block.pos, undefined, {
                   ...block.node.attrs,
                   collapsed: true,
@@ -61,7 +61,7 @@ export default class Folding extends Extension {
             let withinCollapsedHeading;
 
             for (const block of blocks) {
-              if (block.node.type.name === "heading") {
+              if (block.node.type.name === 'heading') {
                 if (
                   !withinCollapsedHeading ||
                   block.node.attrs.level <= withinCollapsedHeading
@@ -80,7 +80,7 @@ export default class Folding extends Extension {
               if (withinCollapsedHeading) {
                 decorations.push(
                   Decoration.node(block.pos, block.pos + block.node.nodeSize, {
-                    class: "folded-content",
+                    class: 'folded-content',
                   })
                 );
               }

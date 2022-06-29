@@ -1,27 +1,27 @@
-import * as React from "react";
-import Node from "./Node";
+import * as React from 'react';
+import Node from './Node';
 
 const cache = {};
 
 export default class Embed extends Node {
   get name() {
-    return "embed";
+    return 'embed';
   }
 
   get schema() {
     return {
-      content: "inline*",
-      group: "block",
+      content: 'inline*',
+      group: 'block',
       atom: true,
       attrs: {
         href: {},
       },
       parseDOM: [
         {
-          tag: "iframe[class=embed]",
+          tag: 'iframe[class=embed]',
           getAttrs: (dom: HTMLIFrameElement) => {
             const { embeds } = this.editor.props;
-            const href = dom.getAttribute("src") || "";
+            const href = dom.getAttribute('src') || '';
 
             if (embeds) {
               for (const embed of embeds) {
@@ -39,8 +39,8 @@ export default class Embed extends Node {
         },
       ],
       toDOM: node => [
-        "iframe",
-        { class: "embed", src: node.attrs.href, contentEditable: false },
+        'iframe',
+        { class: 'embed', src: node.attrs.href, contentEditable: false },
         0,
       ],
     };
@@ -93,16 +93,16 @@ export default class Embed extends Node {
   toMarkdown(state, node) {
     state.ensureNewLine();
     state.write(
-      "[" + state.esc(node.attrs.href) + "](" + state.esc(node.attrs.href) + ")"
+      '[' + state.esc(node.attrs.href) + '](' + state.esc(node.attrs.href) + ')'
     );
-    state.write("\n\n");
+    state.write('\n\n');
   }
 
   parseMarkdown() {
     return {
-      node: "embed",
+      node: 'embed',
       getAttrs: token => ({
-        href: token.attrGet("href"),
+        href: token.attrGet('href'),
       }),
     };
   }

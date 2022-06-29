@@ -1,26 +1,26 @@
-import assert from "assert";
-import * as React from "react";
-import { Portal } from "react-portal";
-import some from "lodash/some";
-import { EditorView } from "prosemirror-view";
-import getTableColMenuItems from "../menus/tableCol";
-import getTableRowMenuItems from "../menus/tableRow";
-import getTableMenuItems from "../menus/table";
-import getFormattingMenuItems from "../menus/formatting";
-import getImageMenuItems from "../menus/image";
-import getDividerMenuItems from "../menus/divider";
-import FloatingToolbar from "./FloatingToolbar";
-import LinkEditor, { SearchResult } from "./LinkEditor";
-import Menu from "./Menu";
-import filterExcessSeparators from "../lib/filterExcessSeparators";
-import isMarkActive from "../queries/isMarkActive";
-import getMarkRange from "../queries/getMarkRange";
-import isNodeActive from "../queries/isNodeActive";
-import getColumnIndex from "../queries/getColumnIndex";
-import getRowIndex from "../queries/getRowIndex";
-import createAndInsertLink from "../commands/createAndInsertLink";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+import assert from 'assert';
+import * as React from 'react';
+import { Portal } from 'react-portal';
+import some from 'lodash/some';
+import { EditorView } from 'prosemirror-view';
+import getTableColMenuItems from '../menus/tableCol';
+import getTableRowMenuItems from '../menus/tableRow';
+import getTableMenuItems from '../menus/table';
+import getFormattingMenuItems from '../menus/formatting';
+import getImageMenuItems from '../menus/image';
+import getDividerMenuItems from '../menus/divider';
+import FloatingToolbar from './FloatingToolbar';
+import LinkEditor, { SearchResult } from './LinkEditor';
+import Menu from './Menu';
+import filterExcessSeparators from '../lib/filterExcessSeparators';
+import isMarkActive from '../queries/isMarkActive';
+import getMarkRange from '../queries/getMarkRange';
+import isNodeActive from '../queries/isNodeActive';
+import getColumnIndex from '../queries/getColumnIndex';
+import getRowIndex from '../queries/getRowIndex';
+import createAndInsertLink from '../commands/createAndInsertLink';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 type Props = {
   dictionary: typeof baseDictionary;
@@ -43,10 +43,10 @@ function isVisible(props) {
 
   if (!selection) return false;
   if (selection.empty) return false;
-  if (selection.node && selection.node.type.name === "hr") {
+  if (selection.node && selection.node.type.name === 'hr') {
     return true;
   }
-  if (selection.node && selection.node.type.name === "image") {
+  if (selection.node && selection.node.type.name === 'image') {
     return true;
   }
   if (selection.node) return false;
@@ -141,7 +141,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     const link = isMarkActive(state.schema.marks.link)(state);
     const range = getMarkRange(selection.$from, state.schema.marks.link);
     const isImageSelection =
-      selection.node && selection.node.type.name === "image";
+      selection.node && selection.node.type.name === 'image';
 
     let items: MenuItem[] = [];
     if (isTableSelection) {
@@ -160,7 +160,7 @@ export default class SelectionToolbar extends React.Component<Props> {
 
     // Some extensions may be disabled, remove corresponding items
     items = items.filter(item => {
-      if (item.name === "separator") return true;
+      if (item.name === 'separator') return true;
       if (item.name && !this.props.commands[item.name]) return false;
       return true;
     });

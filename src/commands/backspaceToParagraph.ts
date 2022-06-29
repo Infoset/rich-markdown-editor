@@ -1,4 +1,5 @@
 export default function backspaceToParagraph(type) {
+  // eslint-disable-next-line react/display-name
   return (state, dispatch) => {
     const { $from, from, to, empty } = state.selection;
 

@@ -1,8 +1,8 @@
-import { EditorState } from "prosemirror-state";
-import { PageBreakIcon, HorizontalRuleIcon } from "outline-icons";
-import isNodeActive from "../queries/isNodeActive";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+import { EditorState } from 'prosemirror-state';
+import { PageBreakIcon, HorizontalRuleIcon } from 'outline-icons';
+import isNodeActive from '../queries/isNodeActive';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 export default function dividerMenuItems(
   state: EditorState,
@@ -12,17 +12,17 @@ export default function dividerMenuItems(
 
   return [
     {
-      name: "hr",
+      name: 'hr',
       tooltip: dictionary.pageBreak,
-      attrs: { markup: "***" },
-      active: isNodeActive(schema.nodes.hr, { markup: "***" }),
+      attrs: { markup: '***' },
+      active: isNodeActive(schema.nodes.hr, { markup: '***' }),
       icon: PageBreakIcon,
     },
     {
-      name: "hr",
+      name: 'hr',
       tooltip: dictionary.hr,
-      attrs: { markup: "---" },
-      active: isNodeActive(schema.nodes.hr, { markup: "---" }),
+      attrs: { markup: '---' },
+      active: isNodeActive(schema.nodes.hr, { markup: '---' }),
       icon: HorizontalRuleIcon,
     },
   ];

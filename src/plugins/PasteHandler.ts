@@ -1,11 +1,11 @@
-import { Plugin } from "prosemirror-state";
-import { isInTable } from "prosemirror-tables";
-import { toggleMark } from "prosemirror-commands";
-import Extension from "../lib/Extension";
-import isUrl from "../lib/isUrl";
-import isMarkdown from "../lib/isMarkdown";
-import selectionIsInCode from "../queries/isInCode";
-import { LANGUAGES } from "./Prism";
+import { Plugin } from 'prosemirror-state';
+import { isInTable } from 'prosemirror-tables';
+import { toggleMark } from 'prosemirror-commands';
+import Extension from '../lib/Extension';
+import isUrl from '../lib/isUrl';
+import isMarkdown from '../lib/isMarkdown';
+import selectionIsInCode from '../queries/isInCode';
+import { LANGUAGES } from './Prism';
 
 /**
  * Add support for additional syntax that users paste even though it isn't
@@ -26,7 +26,7 @@ function normalizePastedMarkdown(text: string): string {
 
 export default class PasteHandler extends Extension {
   get name() {
-    return "markdown-paste";
+    return 'markdown-paste';
   }
 
   get plugins() {
@@ -39,9 +39,9 @@ export default class PasteHandler extends Extension {
             }
             if (!event.clipboardData) return false;
 
-            const text = event.clipboardData.getData("text/plain");
-            const html = event.clipboardData.getData("text/html");
-            const vscode = event.clipboardData.getData("vscode-editor-data");
+            const text = event.clipboardData.getData('text/plain');
+            const html = event.clipboardData.getData('text/html');
+            const vscode = event.clipboardData.getData('vscode-editor-data');
             const { state, dispatch } = view;
 
             // first check if the clipboard contents can be parsed as a single
@@ -99,7 +99,7 @@ export default class PasteHandler extends Extension {
             const vscodeMeta = vscode ? JSON.parse(vscode) : undefined;
             const pasteCodeLanguage = vscodeMeta?.mode;
 
-            if (pasteCodeLanguage && pasteCodeLanguage !== "markdown") {
+            if (pasteCodeLanguage && pasteCodeLanguage !== 'markdown') {
               event.preventDefault();
               view.dispatch(
                 view.state.tr
@@ -118,7 +118,7 @@ export default class PasteHandler extends Extension {
             // If the HTML on the clipboard is from Prosemirror then the best
             // compatability is to just use the HTML parser, regardless of
             // whether it "looks" like Markdown, see: outline/outline#2416
-            if (html?.includes("data-pm-slice")) {
+            if (html?.includes('data-pm-slice')) {
               return false;
             }
 
@@ -127,17 +127,18 @@ export default class PasteHandler extends Extension {
             if (
               isMarkdown(text) ||
               html.length === 0 ||
-              pasteCodeLanguage === "markdown"
+              pasteCodeLanguage === 'markdown'
             ) {
               event.preventDefault();
 
               const paste = this.editor.pasteParser.parse(
                 normalizePastedMarkdown(text)
               );
-              const slice = paste.slice(0);
-
-              const transaction = view.state.tr.replaceSelection(slice);
-              view.dispatch(transaction);
+              if (paste != null) {
+                const slice = paste.slice(0);
+                const transaction = view.state.tr.replaceSelection(slice);
+                view.dispatch(transaction);
+              }
               return true;
             }
 

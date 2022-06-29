@@ -3,13 +3,13 @@ import {
   Selection,
   AllSelection,
   TextSelection,
-} from "prosemirror-state";
-import { GapCursor } from "prosemirror-gapcursor";
-import Extension from "../lib/Extension";
-import isModKey from "../lib/isModKey";
+} from 'prosemirror-state';
+import { GapCursor } from 'prosemirror-gapcursor';
+import Extension from '../lib/Extension';
+import isModKey from '../lib/isModKey';
 export default class Keys extends Extension {
   get name() {
-    return "keys";
+    return 'keys';
   }
 
   get plugins() {
@@ -24,12 +24,12 @@ export default class Keys extends Extension {
           // on the original keyboard event when handled
           handleKeyDown: (view, event) => {
             if (view.state.selection instanceof AllSelection) {
-              if (event.key === "ArrowUp") {
+              if (event.key === 'ArrowUp') {
                 const selection = Selection.atStart(view.state.doc);
                 view.dispatch(view.state.tr.setSelection(selection));
                 return true;
               }
-              if (event.key === "ArrowDown") {
+              if (event.key === 'ArrowDown') {
                 const selection = Selection.atEnd(view.state.doc);
                 view.dispatch(view.state.tr.setSelection(selection));
                 return true;
@@ -39,7 +39,7 @@ export default class Keys extends Extension {
             // edge case where horizontal gap cursor does nothing if Enter key
             // is pressed. Insert a newline and then move the cursor into it.
             if (view.state.selection instanceof GapCursor) {
-              if (event.key === "Enter") {
+              if (event.key === 'Enter') {
                 view.dispatch(
                   view.state.tr.insert(
                     view.state.selection.from,
@@ -63,19 +63,19 @@ export default class Keys extends Extension {
               return false;
             }
 
-            if (event.key === "s") {
+            if (event.key === 's') {
               event.preventDefault();
               this.options.onSave();
               return true;
             }
 
-            if (event.key === "Enter") {
+            if (event.key === 'Enter') {
               event.preventDefault();
               this.options.onSaveAndExit();
               return true;
             }
 
-            if (event.key === "Escape") {
+            if (event.key === 'Escape') {
               event.preventDefault();
               this.options.onCancel();
               return true;

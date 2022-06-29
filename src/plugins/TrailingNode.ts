@@ -1,15 +1,15 @@
-import { Plugin, PluginKey } from "prosemirror-state";
-import Extension from "../lib/Extension";
+import { Plugin, PluginKey } from 'prosemirror-state';
+import Extension from '../lib/Extension';
 
 export default class TrailingNode extends Extension {
   get name() {
-    return "trailing_node";
+    return 'trailing_node';
   }
 
   get defaultOptions() {
     return {
-      node: "paragraph",
-      notAfter: ["paragraph", "heading"],
+      node: 'paragraph',
+      notAfter: ['paragraph', 'heading'],
     };
   }
 

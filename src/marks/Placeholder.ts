@@ -1,30 +1,30 @@
-import { Plugin, TextSelection } from "prosemirror-state";
-import getMarkRange from "../queries/getMarkRange";
-import Mark from "./Mark";
+import { Plugin, TextSelection } from 'prosemirror-state';
+import getMarkRange from '../queries/getMarkRange';
+import Mark from './Mark';
 
 export default class Placeholder extends Mark {
   get name() {
-    return "placeholder";
+    return 'placeholder';
   }
 
   get schema() {
     return {
-      parseDOM: [{ tag: "span.template-placeholder" }],
-      toDOM: () => ["span", { class: "template-placeholder" }],
+      parseDOM: [{ tag: 'span.template-placeholder' }],
+      toDOM: () => ['span', { class: 'template-placeholder' }],
     };
   }
 
   get toMarkdown() {
     return {
-      open: "!!",
-      close: "!!",
+      open: '!!',
+      close: '!!',
       mixable: true,
       expelEnclosingWhitespace: true,
     };
   }
 
   parseMarkdown() {
-    return { mark: "placeholder" };
+    return { mark: 'placeholder' };
   }
 
   get plugins() {
@@ -68,16 +68,16 @@ export default class Placeholder extends Mark {
               return false;
             }
             if (
-              event.key !== "ArrowLeft" &&
-              event.key !== "ArrowRight" &&
-              event.key !== "Backspace"
+              event.key !== 'ArrowLeft' &&
+              event.key !== 'ArrowRight' &&
+              event.key !== 'Backspace'
             ) {
               return false;
             }
 
             const { state, dispatch } = view;
 
-            if (event.key === "Backspace") {
+            if (event.key === 'Backspace') {
               const range = getMarkRange(
                 state.doc.resolve(Math.max(0, state.selection.from - 1)),
                 state.schema.marks.placeholder
@@ -91,12 +91,12 @@ export default class Placeholder extends Mark {
                     range.to,
                     state.schema.marks.placeholder
                   )
-                  .insertText("", range.from, range.to)
+                  .insertText('', range.from, range.to)
               );
               return true;
             }
 
-            if (event.key === "ArrowLeft") {
+            if (event.key === 'ArrowLeft') {
               const range = getMarkRange(
                 state.doc.resolve(Math.max(0, state.selection.from - 1)),
                 state.schema.marks.placeholder
@@ -108,7 +108,7 @@ export default class Placeholder extends Mark {
               return true;
             }
 
-            if (event.key === "ArrowRight") {
+            if (event.key === 'ArrowRight') {
               const range = getMarkRange(
                 state.selection.$from,
                 state.schema.marks.placeholder
@@ -132,7 +132,7 @@ export default class Placeholder extends Mark {
 
             if (
               event.target instanceof HTMLSpanElement &&
-              event.target.className.includes("template-placeholder")
+              event.target.className.includes('template-placeholder')
             ) {
               const { state, dispatch } = view;
               const range = getMarkRange(

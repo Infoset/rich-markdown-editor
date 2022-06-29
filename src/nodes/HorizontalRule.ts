@@ -1,24 +1,24 @@
-import { InputRule } from "prosemirror-inputrules";
-import Node from "./Node";
+import { InputRule } from 'prosemirror-inputrules';
+import Node from './Node';
 
 export default class HorizontalRule extends Node {
   get name() {
-    return "hr";
+    return 'hr';
   }
 
   get schema() {
     return {
       attrs: {
         markup: {
-          default: "---",
+          default: '---',
         },
       },
-      group: "block",
-      parseDOM: [{ tag: "hr" }],
+      group: 'block',
+      parseDOM: [{ tag: 'hr' }],
       toDOM: node => {
         return [
-          "hr",
-          { class: node.attrs.markup === "***" ? "page-break" : "" },
+          'hr',
+          { class: node.attrs.markup === '***' ? 'page-break' : '' },
         ];
       },
     };
@@ -35,7 +35,7 @@ export default class HorizontalRule extends Node {
 
   keys({ type }) {
     return {
-      "Mod-_": (state, dispatch) => {
+      'Mod-_': (state, dispatch) => {
         dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
         return true;
       },
@@ -64,7 +64,7 @@ export default class HorizontalRule extends Node {
 
   parseMarkdown() {
     return {
-      node: "hr",
+      node: 'hr',
       getAttrs: tok => ({
         markup: tok.markup,
       }),

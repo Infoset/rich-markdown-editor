@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from 'react';
 
 export default function useViewportHeight(): number | void {
   // https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport#browser_compatibility
@@ -13,10 +13,10 @@ export default function useViewportHeight(): number | void {
       setHeight(() => window.visualViewport?.height || window.innerHeight);
     };
 
-    window.visualViewport?.addEventListener("resize", handleResize);
+    window.visualViewport?.addEventListener('resize', handleResize);
 
     return () => {
-      window.visualViewport?.removeEventListener("resize", handleResize);
+      window.visualViewport?.removeEventListener('resize', handleResize);
     };
   }, []);
 

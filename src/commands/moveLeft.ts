@@ -22,8 +22,8 @@ import {
   EditorState,
   Transaction,
   TextSelection,
-} from "prosemirror-state";
-import isMarkActive from "../queries/isMarkActive";
+} from 'prosemirror-state';
+import isMarkActive from '../queries/isMarkActive';
 
 function hasCode(state: EditorState, pos: number) {
   const { code_inline } = state.schema.marks;

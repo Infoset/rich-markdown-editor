@@ -1,20 +1,20 @@
-import * as React from "react";
-import capitalize from "lodash/capitalize";
-import { Portal } from "react-portal";
-import { EditorView } from "prosemirror-view";
-import { findParentNode } from "prosemirror-utils";
-import styled from "styled-components";
-import { EmbedDescriptor, MenuItem, ToastType } from "../types";
-import BlockMenuItem from "./BlockMenuItem";
-import Input from "./Input";
-import VisuallyHidden from "./VisuallyHidden";
-import getDataTransferFiles from "../lib/getDataTransferFiles";
-import insertFiles from "../commands/insertFiles";
-import getMenuItems from "../menus/block";
-import baseDictionary from "../dictionary";
-import filterExcessSeparators from "../lib/filterExcessSeparators";
+import * as React from 'react';
+import capitalize from 'lodash/capitalize';
+import { Portal } from 'react-portal';
+import { EditorView } from 'prosemirror-view';
+import { findParentNode } from 'prosemirror-utils';
+import styled from 'styled-components';
+import { EmbedDescriptor, MenuItem, ToastType } from '../types';
+import BlockMenuItem from './BlockMenuItem';
+import Input from './Input';
+import VisuallyHidden from './VisuallyHidden';
+import getDataTransferFiles from '../lib/getDataTransferFiles';
+import insertFiles from '../commands/insertFiles';
+import getMenuItems from '../menus/block';
+import baseDictionary from '../dictionary';
+import filterExcessSeparators from '../lib/filterExcessSeparators';
 
-const SSR = typeof window === "undefined";
+const SSR = typeof window === 'undefined';
 
 const defaultPosition = {
   left: -1000,
@@ -63,7 +63,7 @@ class BlockMenu extends React.Component<Props, State> {
 
   componentDidMount() {
     if (!SSR) {
-      window.addEventListener("keydown", this.handleKeyDown);
+      window.addEventListener('keydown', this.handleKeyDown);
     }
   }
 
@@ -91,14 +91,14 @@ class BlockMenu extends React.Component<Props, State> {
 
   componentWillUnmount() {
     if (!SSR) {
-      window.removeEventListener("keydown", this.handleKeyDown);
+      window.removeEventListener('keydown', this.handleKeyDown);
     }
   }
 
   handleKeyDown = (event: KeyboardEvent) => {
     if (!this.props.isActive) return;
 
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
 
@@ -111,7 +111,7 @@ class BlockMenu extends React.Component<Props, State> {
       }
     }
 
-    if (event.key === "ArrowUp" || (event.ctrlKey && event.key === "p")) {
+    if (event.key === 'ArrowUp' || (event.ctrlKey && event.key === 'p')) {
       event.preventDefault();
       event.stopPropagation();
 
@@ -122,7 +122,7 @@ class BlockMenu extends React.Component<Props, State> {
         this.setState({
           selectedIndex: Math.max(
             0,
-            prev && prev.name === "separator" ? prevIndex - 1 : prevIndex
+            prev && prev.name === 'separator' ? prevIndex - 1 : prevIndex
           ),
         });
       } else {
@@ -131,9 +131,9 @@ class BlockMenu extends React.Component<Props, State> {
     }
 
     if (
-      event.key === "ArrowDown" ||
-      event.key === "Tab" ||
-      (event.ctrlKey && event.key === "n")
+      event.key === 'ArrowDown' ||
+      event.key === 'Tab' ||
+      (event.ctrlKey && event.key === 'n')
     ) {
       event.preventDefault();
       event.stopPropagation();
@@ -145,7 +145,7 @@ class BlockMenu extends React.Component<Props, State> {
 
         this.setState({
           selectedIndex: Math.min(
-            next && next.name === "separator" ? nextIndex + 1 : nextIndex,
+            next && next.name === 'separator' ? nextIndex + 1 : nextIndex,
             total
           ),
         });
@@ -154,18 +154,18 @@ class BlockMenu extends React.Component<Props, State> {
       }
     }
 
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       this.close();
     }
   };
 
   insertItem = item => {
     switch (item.name) {
-      case "image":
+      case 'image':
         return this.triggerImagePick();
-      case "embed":
+      case 'embed':
         return this.triggerLinkInput(item);
-      case "link": {
+      case 'link': {
         this.clearSearch();
         this.props.onClose();
         this.props.onLinkToolbarOpen();
@@ -185,7 +185,7 @@ class BlockMenu extends React.Component<Props, State> {
     if (!this.props.isActive) return;
     if (!this.state.insertItem) return;
 
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
 
@@ -201,14 +201,14 @@ class BlockMenu extends React.Component<Props, State> {
       }
 
       this.insertBlock({
-        name: "embed",
+        name: 'embed',
         attrs: {
           href,
         },
       });
     }
 
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       this.props.onClose();
       this.props.view.focus();
     }
@@ -218,7 +218,7 @@ class BlockMenu extends React.Component<Props, State> {
     if (!this.props.isActive) return;
     if (!this.state.insertItem) return;
 
-    const href = event.clipboardData.getData("text/plain");
+    const href = event.clipboardData.getData('text/plain');
     const matches = this.state.insertItem.matcher(href);
 
     if (matches) {
@@ -226,7 +226,7 @@ class BlockMenu extends React.Component<Props, State> {
       event.stopPropagation();
 
       this.insertBlock({
-        name: "embed",
+        name: 'embed',
         attrs: {
           href,
         },
@@ -270,7 +270,7 @@ class BlockMenu extends React.Component<Props, State> {
     }
 
     if (this.inputRef.current) {
-      this.inputRef.current.value = "";
+      this.inputRef.current.value = '';
     }
 
     this.props.onClose();
@@ -281,7 +281,7 @@ class BlockMenu extends React.Component<Props, State> {
     const parent = findParentNode(node => !!node)(state.selection);
 
     if (parent) {
-      dispatch(state.tr.insertText("", parent.pos, state.selection.to));
+      dispatch(state.tr.insertText('', parent.pos, state.selection.to));
     }
   }
 
@@ -383,7 +383,7 @@ class BlockMenu extends React.Component<Props, State> {
     const {
       dictionary,
       embeds,
-      search = "",
+      search = '',
       uploadImage,
       commands,
     } = this.props;
@@ -394,20 +394,20 @@ class BlockMenu extends React.Component<Props, State> {
       if (embed.title && embed.icon) {
         embedItems.push({
           ...embed,
-          name: "embed",
+          name: 'embed',
         });
       }
     }
 
     if (embedItems.length) {
       items.push({
-        name: "separator",
+        name: 'separator',
       });
       items = items.concat(embedItems);
     }
 
     const filtered = items.filter(item => {
-      if (item.name === "separator") return true;
+      if (item.name === 'separator') return true;
 
       // Some extensions may be disabled, remove corresponding menu items
       if (
@@ -419,15 +419,15 @@ class BlockMenu extends React.Component<Props, State> {
       }
 
       // If no image upload callback has been passed, filter the image block out
-      if (!uploadImage && item.name === "image") return false;
+      if (!uploadImage && item.name === 'image') return false;
 
       // some items (defaultHidden) are not visible until a search query exists
       if (!search) return !item.defaultHidden;
 
       const n = search.toLowerCase();
       return (
-        (item.title || "").toLowerCase().includes(n) ||
-        (item.keywords || "").toLowerCase().includes(n)
+        (item.title || '').toLowerCase().includes(n) ||
+        (item.keywords || '').toLowerCase().includes(n)
       );
     });
 
@@ -465,7 +465,7 @@ class BlockMenu extends React.Component<Props, State> {
           ) : (
             <List>
               {items.map((item, index) => {
-                if (item.name === "separator") {
+                if (item.name === 'separator') {
                   return (
                     <ListItem key={index}>
                       <hr />
@@ -593,7 +593,7 @@ export const Wrapper = styled.div<{
   ${({ active, isAbove }) =>
     active &&
     `
-    transform: translateY(${isAbove ? "6px" : "-6px"}) scale(1);
+    transform: translateY(${isAbove ? '6px' : '-6px'}) scale(1);
     pointer-events: all;
     opacity: 1;
   `};

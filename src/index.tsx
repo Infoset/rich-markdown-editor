@@ -1,79 +1,79 @@
 /* global window File Promise */
-import * as React from "react";
-import memoize from "lodash/memoize";
-import { EditorState, Selection, Plugin } from "prosemirror-state";
-import { dropCursor } from "prosemirror-dropcursor";
-import { gapCursor } from "prosemirror-gapcursor";
-import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
-import { EditorView } from "prosemirror-view";
-import { Schema, NodeSpec, MarkSpec, Slice } from "prosemirror-model";
-import { inputRules, InputRule } from "prosemirror-inputrules";
-import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
-import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
-import styled, { ThemeProvider } from "styled-components";
-import { light as lightTheme, dark as darkTheme } from "./theme";
-import baseDictionary from "./dictionary";
-import Flex from "./components/Flex";
-import { SearchResult } from "./components/LinkEditor";
-import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar from "./components/SelectionToolbar";
-import BlockMenu from "./components/BlockMenu";
-import LinkToolbar from "./components/LinkToolbar";
-import Tooltip from "./components/Tooltip";
-import Extension from "./lib/Extension";
-import ExtensionManager from "./lib/ExtensionManager";
-import ComponentView from "./lib/ComponentView";
-import headingToSlug from "./lib/headingToSlug";
+import memoize from 'lodash/memoize';
+import { baseKeymap } from 'prosemirror-commands';
+import { dropCursor } from 'prosemirror-dropcursor';
+import { gapCursor } from 'prosemirror-gapcursor';
+import { InputRule, inputRules } from 'prosemirror-inputrules';
+import { keymap } from 'prosemirror-keymap';
+import { MarkdownParser, MarkdownSerializer } from 'prosemirror-markdown';
+import { MarkSpec, NodeSpec, Schema, Slice } from 'prosemirror-model';
+import { EditorState, Plugin, Selection } from 'prosemirror-state';
+import { selectColumn, selectRow, selectTable } from 'prosemirror-utils';
+import { EditorView, NodeViewConstructor } from 'prosemirror-view';
+import * as React from 'react';
+import styled, { CSSProperties, ThemeProvider } from 'styled-components';
+import BlockMenu from './components/BlockMenu';
+import Flex from './components/Flex';
+import { SearchResult } from './components/LinkEditor';
+import LinkToolbar from './components/LinkToolbar';
+import SelectionToolbar from './components/SelectionToolbar';
+import Tooltip from './components/Tooltip';
+import baseDictionary from './dictionary';
+import ComponentView from './lib/ComponentView';
+import Extension from './lib/Extension';
+import ExtensionManager from './lib/ExtensionManager';
+import headingToSlug from './lib/headingToSlug';
+import { dark as darkTheme, light as lightTheme } from './theme';
+import { EmbedDescriptor, ToastType } from './types';
 
 // nodes
-import ReactNode from "./nodes/ReactNode";
-import Doc from "./nodes/Doc";
-import Text from "./nodes/Text";
-import Blockquote from "./nodes/Blockquote";
-import BulletList from "./nodes/BulletList";
-import CodeBlock from "./nodes/CodeBlock";
-import CodeFence from "./nodes/CodeFence";
-import CheckboxList from "./nodes/CheckboxList";
-import CheckboxItem from "./nodes/CheckboxItem";
-import Embed from "./nodes/Embed";
-import HardBreak from "./nodes/HardBreak";
-import Heading from "./nodes/Heading";
-import HorizontalRule from "./nodes/HorizontalRule";
-import Image from "./nodes/Image";
-import ListItem from "./nodes/ListItem";
-import Notice from "./nodes/Notice";
-import OrderedList from "./nodes/OrderedList";
-import Paragraph from "./nodes/Paragraph";
-import Table from "./nodes/Table";
-import TableCell from "./nodes/TableCell";
-import TableHeadCell from "./nodes/TableHeadCell";
-import TableRow from "./nodes/TableRow";
+import Blockquote from './nodes/Blockquote';
+import BulletList from './nodes/BulletList';
+import CheckboxItem from './nodes/CheckboxItem';
+import CheckboxList from './nodes/CheckboxList';
+import CodeBlock from './nodes/CodeBlock';
+import CodeFence from './nodes/CodeFence';
+import Doc from './nodes/Doc';
+import Embed from './nodes/Embed';
+import HardBreak from './nodes/HardBreak';
+import Heading from './nodes/Heading';
+import HorizontalRule from './nodes/HorizontalRule';
+import Image from './nodes/Image';
+import ListItem from './nodes/ListItem';
+import Notice from './nodes/Notice';
+import OrderedList from './nodes/OrderedList';
+import Paragraph from './nodes/Paragraph';
+import ReactNode from './nodes/ReactNode';
+import Table from './nodes/Table';
+import TableCell from './nodes/TableCell';
+import TableHeadCell from './nodes/TableHeadCell';
+import TableOfContents from './nodes/TableOfContents';
+import TableRow from './nodes/TableRow';
+import Text from './nodes/Text';
 
 // marks
-import Bold from "./marks/Bold";
-import Code from "./marks/Code";
-import Highlight from "./marks/Highlight";
-import Italic from "./marks/Italic";
-import Link from "./marks/Link";
-import Strikethrough from "./marks/Strikethrough";
-import TemplatePlaceholder from "./marks/Placeholder";
-import Underline from "./marks/Underline";
+import Bold from './marks/Bold';
+import Code from './marks/Code';
+import Highlight from './marks/Highlight';
+import Italic from './marks/Italic';
+import Link from './marks/Link';
+import TemplatePlaceholder from './marks/Placeholder';
+import Strikethrough from './marks/Strikethrough';
+import Underline from './marks/Underline';
 
 // plugins
-import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
-import Folding from "./plugins/Folding";
-import History from "./plugins/History";
-import Keys from "./plugins/Keys";
-import MaxLength from "./plugins/MaxLength";
-import Placeholder from "./plugins/Placeholder";
-import SmartText from "./plugins/SmartText";
-import TrailingNode from "./plugins/TrailingNode";
-import PasteHandler from "./plugins/PasteHandler";
+import BlockMenuTrigger from './plugins/BlockMenuTrigger';
+import Folding from './plugins/Folding';
+import History from './plugins/History';
+import Keys from './plugins/Keys';
+import MaxLength from './plugins/MaxLength';
+import PasteHandler from './plugins/PasteHandler';
+import Placeholder from './plugins/Placeholder';
+import SmartText from './plugins/SmartText';
+import TrailingNode from './plugins/TrailingNode';
 
-export { schema, parser, serializer, renderToHtml } from "./server";
-
-export { default as Extension } from "./lib/Extension";
+export { default as Extension } from './lib/Extension';
+export { parser, renderToHtml, schema, serializer } from './server';
 
 export const theme = lightTheme;
 
@@ -84,33 +84,34 @@ export type Props = {
   placeholder: string;
   extensions: Extension[];
   disableExtensions?: (
-    | "strong"
-    | "code_inline"
-    | "highlight"
-    | "em"
-    | "link"
-    | "placeholder"
-    | "strikethrough"
-    | "underline"
-    | "blockquote"
-    | "bullet_list"
-    | "checkbox_item"
-    | "checkbox_list"
-    | "code_block"
-    | "code_fence"
-    | "embed"
-    | "br"
-    | "heading"
-    | "hr"
-    | "image"
-    | "list_item"
-    | "container_notice"
-    | "ordered_list"
-    | "paragraph"
-    | "table"
-    | "td"
-    | "th"
-    | "tr"
+    | 'strong'
+    | 'code_inline'
+    | 'highlight'
+    | 'em'
+    | 'link'
+    | 'placeholder'
+    | 'strikethrough'
+    | 'underline'
+    | 'blockquote'
+    | 'bullet_list'
+    | 'checkbox_item'
+    | 'checkbox_list'
+    | 'code_block'
+    | 'code_fence'
+    | 'embed'
+    | 'br'
+    | 'heading'
+    | 'hr'
+    | 'image'
+    | 'list_item'
+    | 'container_notice'
+    | 'table_of_contents'
+    | 'ordered_list'
+    | 'paragraph'
+    | 'table'
+    | 'td'
+    | 'th'
+    | 'tr'
   )[];
   autoFocus?: boolean;
   readOnly?: boolean;
@@ -129,7 +130,7 @@ export type Props = {
   uploadImage?: (file: File) => Promise<string>;
   onBlur?: () => void;
   onFocus?: () => void;
-  onSave?: ({ done: boolean }) => void;
+  onSave?: ({ done }: { done: boolean }) => void;
   onCancel?: () => void;
   onChange?: (value: () => string) => void;
   onImageUploadStart?: () => void;
@@ -139,12 +140,12 @@ export type Props = {
   onClickLink: (href: string, event: MouseEvent) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string, event: MouseEvent) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  onKeyDown?: React.KeyboardEventHandler<HTMLDivElement> | undefined;
   embeds: EmbedDescriptor[];
   onShowToast?: (message: string, code: ToastType) => void;
   tooltip: typeof React.Component | React.FC<any>;
   className?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 };
 
 type State = {
@@ -162,9 +163,9 @@ type Step = {
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
-    defaultValue: "",
-    dir: "auto",
-    placeholder: "Write something nice…",
+    defaultValue: '',
+    dir: 'auto',
+    placeholder: 'Write something nice…',
     onImageUploadStart: () => {
       // no default behavior
     },
@@ -172,7 +173,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       // no default behavior
     },
     onClickLink: href => {
-      window.open(href, "_blank");
+      window.open(href, '_blank');
     },
     embeds: [],
     extensions: [],
@@ -185,7 +186,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     selectionMenuOpen: false,
     blockMenuOpen: false,
     linkMenuOpen: false,
-    blockMenuSearch: "",
+    blockMenuSearch: '',
   };
 
   isBlurred: boolean;
@@ -199,9 +200,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   plugins: Plugin[];
   keymaps: Plugin[];
   inputRules: InputRule[];
-  nodeViews: {
-    [name: string]: (node, view, getPos, decorations) => ComponentView;
-  };
+  nodeViews: { [node: string]: NodeViewConstructor };
   nodes: { [name: string]: NodeSpec };
   marks: { [name: string]: MarkSpec };
   commands: Record<string, any>;
@@ -306,6 +305,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new HardBreak(),
           new Paragraph(),
           new Blockquote(),
+          new TableOfContents(),
           new CodeBlock({
             dictionary,
             onShowToast: this.props.onShowToast,
@@ -493,12 +493,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 
   createDocument(content: string) {
-    return this.parser.parse(content);
+    return this.parser.parse(content) || undefined;
   }
 
   createView() {
     if (!this.element) {
-      throw new Error("createView called before ref available");
+      throw new Error('createView called before ref available');
     }
 
     const isEditingCheckbox = tr => {
@@ -515,11 +515,10 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       editable: () => !this.props.readOnly,
       nodeViews: this.nodeViews,
       handleDOMEvents: this.props.handleDOMEvents,
-      dispatchTransaction: function(transaction) {
+      dispatchTransaction: function (transaction) {
         // callback is bound to have the view instance as its this binding
-        const { state, transactions } = this.state.applyTransaction(
-          transaction
-        );
+        const { state, transactions } =
+          this.state.applyTransaction(transaction);
 
         this.updateState(state);
 
@@ -544,7 +543,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     });
 
     // Tell third-party libraries and screen-readers that this is an input
-    view.dom.setAttribute("role", "textbox");
+    view.dom.setAttribute('role', 'textbox');
 
     return view;
   }
@@ -554,7 +553,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     try {
       const element = document.querySelector(hash);
-      if (element) element.scrollIntoView({ behavior: "smooth" });
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       // querySelector will throw an error if the hash begins with a number
       // or contains a period. This is protected against now by safeSlugify
@@ -567,8 +566,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (!this.element) return;
 
     const isRTL =
-      this.props.dir === "rtl" ||
-      getComputedStyle(this.element).direction === "rtl";
+      this.props.dir === 'rtl' ||
+      getComputedStyle(this.element).direction === 'rtl';
 
     if (this.state.isRTL !== isRTL) {
       this.setState({ isRTL });
@@ -666,7 +665,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const previouslySeen = {};
 
     this.view.state.doc.forEach(node => {
-      if (node.type.name === "heading") {
+      if (node.type.name === 'heading') {
         // calculate the optimal slug
         const slug = headingToSlug(node);
         let id = slug;
@@ -784,7 +783,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   }
 }
 
-const StyledEditor = styled("div")<{
+const StyledEditor = styled('div')<{
   rtl: boolean;
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
@@ -822,7 +821,7 @@ const StyledEditor = styled("div")<{
     clear: both;
 
     img {
-      pointer-events: ${props => (props.readOnly ? "initial" : "none")};
+      pointer-events: ${props => (props.readOnly ? 'initial' : 'none')};
       display: inline-block;
       max-width: 100%;
       max-height: 75vh;
@@ -871,7 +870,7 @@ const StyledEditor = styled("div")<{
 
   .ProseMirror-selectednode {
     outline: 2px solid
-      ${props => (props.readOnly ? "transparent" : props.theme.selected)};
+      ${props => (props.readOnly ? 'transparent' : props.theme.selected)};
   }
 
   /* Make sure li selections wrap around markers */
@@ -883,8 +882,8 @@ const StyledEditor = styled("div")<{
   li.ProseMirror-selectednode:after {
     content: "";
     position: absolute;
-    left: ${props => (props.rtl ? "-2px" : "-32px")};
-    right: ${props => (props.rtl ? "-32px" : "-2px")};
+    left: ${props => (props.rtl ? '-2px' : '-32px')};
+    right: ${props => (props.rtl ? '-32px' : '-2px')};
     top: -2px;
     bottom: -2px;
     border: 2px solid ${props => props.theme.selected};
@@ -911,12 +910,12 @@ const StyledEditor = styled("div")<{
     cursor: text;
 
     &:not(.placeholder):before {
-      display: ${props => (props.readOnly ? "none" : "inline-block")};
+      display: ${props => (props.readOnly ? 'none' : 'inline-block')};
       font-family: ${props => props.theme.fontFamilyMono};
       color: ${props => props.theme.textSecondary};
       font-size: 13px;
       line-height: 0;
-      margin-${props => (props.rtl ? "right" : "left")}: -24px;
+      margin-${props => (props.rtl ? 'right' : 'left')}: -24px;
       width: 24px;
     }
 
@@ -974,7 +973,7 @@ const StyledEditor = styled("div")<{
   }
 
   .with-emoji {
-    margin-${props => (props.rtl ? "right" : "left")}: -1em;
+    margin-${props => (props.rtl ? 'right' : 'left')}: -1em;
   }
 
   .heading-anchor,
@@ -1004,8 +1003,8 @@ const StyledEditor = styled("div")<{
   .heading-actions {
     opacity: 0;
     background: ${props => props.theme.background};
-    margin-${props => (props.rtl ? "right" : "left")}: -26px;
-    flex-direction: ${props => (props.rtl ? "row-reverse" : "row")};
+    margin-${props => (props.rtl ? 'right' : 'left')}: -26px;
+    flex-direction: ${props => (props.rtl ? 'row-reverse' : 'row')};
     display: inline-flex;
     position: relative;
     top: -2px;
@@ -1047,7 +1046,7 @@ const StyledEditor = styled("div")<{
     padding: 0;
 
     &.collapsed {
-      transform: rotate(${props => (props.rtl ? "90deg" : "-90deg")});
+      transform: rotate(${props => (props.rtl ? '90deg' : '-90deg')});
       transition-delay: 0.1s;
       opacity: 1;
     }
@@ -1056,7 +1055,7 @@ const StyledEditor = styled("div")<{
   .placeholder {
     &:before {
       display: block;
-      content: ${props => (props.readOnly ? "" : "attr(data-empty-text)")};
+      content: ${props => (props.readOnly ? '' : 'attr(data-empty-text)')};
       pointer-events: none;
       height: 0;
       color: ${props => props.theme.placeholder};
@@ -1089,7 +1088,7 @@ const StyledEditor = styled("div")<{
     width: 24px;
     height: 24px;
     align-self: flex-start;
-    margin-${props => (props.rtl ? "left" : "right")}: 4px;
+    margin-${props => (props.rtl ? 'left' : 'right')}: 4px;
     position: relative;
     top: 1px;
   }
@@ -1125,7 +1124,7 @@ const StyledEditor = styled("div")<{
       width: 2px;
       border-radius: 1px;
       position: absolute;
-      margin-${props => (props.rtl ? "right" : "left")}: -1.5em;
+      margin-${props => (props.rtl ? 'right' : 'left')}: -1.5em;
       top: 0;
       bottom: 0;
       background: ${props => props.theme.quote};
@@ -1163,17 +1162,17 @@ const StyledEditor = styled("div")<{
   }
 
   a:hover {
-    text-decoration: ${props => (props.readOnly ? "underline" : "none")};
+    text-decoration: ${props => (props.readOnly ? 'underline' : 'none')};
   }
 
   ul,
   ol {
-    margin: ${props => (props.rtl ? "0 -26px 0 0.1em" : "0 0.1em 0 -26px")};
-    padding: ${props => (props.rtl ? "0 44px 0 0" : "0 0 0 44px")};
+    margin: ${props => (props.rtl ? '0 -26px 0 0.1em' : '0 0.1em 0 -26px')};
+    padding: ${props => (props.rtl ? '0 44px 0 0' : '0 0 0 44px')};
 
     ul,
     ol {
-      margin-${props => (props.rtl ? "left" : "right")}: -24px;
+      margin-${props => (props.rtl ? 'left' : 'right')}: -24px;
     }
   }
 
@@ -1188,7 +1187,7 @@ const StyledEditor = styled("div")<{
   ul.checkbox_list {
     list-style: none;
     padding: 0;
-    margin: ${props => (props.rtl ? "0 -24px 0 0" : "0 0 0 -24px")};
+    margin: ${props => (props.rtl ? '0 -24px 0 0' : '0 0 0 -24px')};
   }
 
   ul li,
@@ -1207,7 +1206,7 @@ const StyledEditor = styled("div")<{
 
   ul.checkbox_list li {
     display: flex;
-    padding-${props => (props.rtl ? "right" : "left")}: 24px;
+    padding-${props => (props.rtl ? 'right' : 'left')}: 24px;
   }
 
   ul.checkbox_list li.checked > div > p {
@@ -1220,12 +1219,12 @@ const StyledEditor = styled("div")<{
     background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeD0iOCIgeT0iNyIgd2lkdGg9IjMiIGhlaWdodD0iMiIgcng9IjEiIGZpbGw9IiM0RTVDNkUiLz4KPHJlY3QgeD0iOCIgeT0iMTEiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjNEU1QzZFIi8+CjxyZWN0IHg9IjgiIHk9IjE1IiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiByeD0iMSIgZmlsbD0iIzRFNUM2RSIvPgo8cmVjdCB4PSIxMyIgeT0iNyIgd2lkdGg9IjMiIGhlaWdodD0iMiIgcng9IjEiIGZpbGw9IiM0RTVDNkUiLz4KPHJlY3QgeD0iMTMiIHk9IjExIiB3aWR0aD0iMyIgaGVpZ2h0PSIyIiByeD0iMSIgZmlsbD0iIzRFNUM2RSIvPgo8cmVjdCB4PSIxMyIgeT0iMTUiIHdpZHRoPSIzIiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjNEU1QzZFIi8+Cjwvc3ZnPgo=") no-repeat;
     background-position: 0 2px;
     content: "";
-    display: ${props => (props.readOnly ? "none" : "inline-block")};
+    display: ${props => (props.readOnly ? 'none' : 'inline-block')};
     cursor: grab;
     width: 24px;
     height: 24px;
     position: absolute;
-    ${props => (props.rtl ? "right" : "left")}: -40px;
+    ${props => (props.rtl ? 'right' : 'left')}: -40px;
     opacity: 0;
     transition: opacity 200ms ease-in-out;
   }
@@ -1237,7 +1236,7 @@ const StyledEditor = styled("div")<{
 
   ul > li.counter-2::before,
   ol li.counter-2::before {
-    ${props => (props.rtl ? "right" : "left")}: -50px;
+    ${props => (props.rtl ? 'right' : 'left')}: -50px;
   }
 
   ul > li.hovering::before,
@@ -1251,16 +1250,16 @@ const StyledEditor = styled("div")<{
   }
 
   ul.checkbox_list li::before {
-    ${props => (props.rtl ? "right" : "left")}: 0;
+    ${props => (props.rtl ? 'right' : 'left')}: 0;
   }
 
   ul.checkbox_list li input {
     cursor: pointer;
     pointer-events: ${props =>
-      props.readOnly && !props.readOnlyWriteCheckboxes ? "none" : "initial"};
+      props.readOnly && !props.readOnlyWriteCheckboxes ? 'none' : 'initial'};
     opacity: ${props =>
       props.readOnly && !props.readOnlyWriteCheckboxes ? 0.75 : 1};
-    margin: ${props => (props.rtl ? "0.5em 0 0 0.5em" : "0.5em 0.5em 0 0")};
+    margin: ${props => (props.rtl ? '0.5em 0 0 0.5em' : '0.5em 0.5em 0 0')};
     width: 14px;
     height: 14px;
   }
@@ -1340,7 +1339,7 @@ const StyledEditor = styled("div")<{
     &.notice-block {
       select,
       button {
-        ${props => (props.rtl ? "left" : "right")}: 4px;
+        ${props => (props.rtl ? 'left' : 'right')}: 4px;
       }
     }
 
@@ -1350,11 +1349,11 @@ const StyledEditor = styled("div")<{
 
     &:hover {
       select {
-        display: ${props => (props.readOnly ? "none" : "inline")};
+        display: ${props => (props.readOnly ? 'none' : 'inline')};
       }
 
       button {
-        display: ${props => (props.readOnly ? "inline" : "none")};
+        display: ${props => (props.readOnly ? 'inline' : 'none')};
       }
     }
 
@@ -1524,13 +1523,13 @@ const StyledEditor = styled("div")<{
       border: 1px solid ${props => props.theme.tableDivider};
       position: relative;
       padding: 4px 8px;
-      text-align: ${props => (props.rtl ? "right" : "left")};
+      text-align: ${props => (props.rtl ? 'right' : 'left')};
       min-width: 100px;
     }
 
     .selectedCell {
       background: ${props =>
-        props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
+        props.readOnly ? 'inherit' : props.theme.tableSelectedBackground};
 
       /* fixes Firefox background color painting over border:
        * https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
@@ -1547,22 +1546,22 @@ const StyledEditor = styled("div")<{
         cursor: pointer;
         position: absolute;
         top: -16px;
-        ${props => (props.rtl ? "right" : "left")}: 0;
+        ${props => (props.rtl ? 'right' : 'left')}: 0;
         width: 100%;
         height: 12px;
         background: ${props => props.theme.tableDivider};
         border-bottom: 3px solid ${props => props.theme.background};
-        display: ${props => (props.readOnly ? "none" : "block")};
+        display: ${props => (props.readOnly ? 'none' : 'block')};
       }
 
       &:hover::after {
         background: ${props => props.theme.text};
       }
       &.first::after {
-        border-top-${props => (props.rtl ? "right" : "left")}-radius: 3px;
+        border-top-${props => (props.rtl ? 'right' : 'left')}-radius: 3px;
       }
       &.last::after {
-        border-top-${props => (props.rtl ? "left" : "right")}-radius: 3px;
+        border-top-${props => (props.rtl ? 'left' : 'right')}-radius: 3px;
       }
       &.selected::after {
         background: ${props => props.theme.tableSelected};
@@ -1574,24 +1573,24 @@ const StyledEditor = styled("div")<{
         content: "";
         cursor: pointer;
         position: absolute;
-        ${props => (props.rtl ? "right" : "left")}: -16px;
+        ${props => (props.rtl ? 'right' : 'left')}: -16px;
         top: 0;
         height: 100%;
         width: 12px;
         background: ${props => props.theme.tableDivider};
-        border-${props => (props.rtl ? "left" : "right")}: 3px solid;
+        border-${props => (props.rtl ? 'left' : 'right')}: 3px solid;
         border-color: ${props => props.theme.background};
-        display: ${props => (props.readOnly ? "none" : "block")};
+        display: ${props => (props.readOnly ? 'none' : 'block')};
       }
 
       &:hover::after {
         background: ${props => props.theme.text};
       }
       &.first::after {
-        border-top-${props => (props.rtl ? "right" : "left")}-radius: 3px;
+        border-top-${props => (props.rtl ? 'right' : 'left')}-radius: 3px;
       }
       &.last::after {
-        border-bottom-${props => (props.rtl ? "right" : "left")}-radius: 3px;
+        border-bottom-${props => (props.rtl ? 'right' : 'left')}-radius: 3px;
       }
       &.selected::after {
         background: ${props => props.theme.tableSelected};
@@ -1609,8 +1608,8 @@ const StyledEditor = styled("div")<{
         border: 2px solid ${props => props.theme.background};
         position: absolute;
         top: -18px;
-        ${props => (props.rtl ? "right" : "left")}: -18px;
-        display: ${props => (props.readOnly ? "none" : "block")};
+        ${props => (props.rtl ? 'right' : 'left')}: -18px;
+        display: ${props => (props.readOnly ? 'none' : 'block')};
       }
 
       &:hover::after {
@@ -1657,10 +1656,10 @@ const StyledEditor = styled("div")<{
   .scrollable {
     overflow-y: hidden;
     overflow-x: auto;
-    padding-${props => (props.rtl ? "right" : "left")}: 1em;
-    margin-${props => (props.rtl ? "right" : "left")}: -1em;
-    border-${props => (props.rtl ? "right" : "left")}: 1px solid transparent;
-    border-${props => (props.rtl ? "left" : "right")}: 1px solid transparent;
+    padding-${props => (props.rtl ? 'right' : 'left')}: 1em;
+    margin-${props => (props.rtl ? 'right' : 'left')}: -1em;
+    border-${props => (props.rtl ? 'right' : 'left')}: 1px solid transparent;
+    border-${props => (props.rtl ? 'left' : 'right')}: 1px solid transparent;
     transition: border 250ms ease-in-out 0s;
   }
 
@@ -1668,11 +1667,11 @@ const StyledEditor = styled("div")<{
     position: absolute;
     top: 0;
     bottom: 0;
-    ${props => (props.rtl ? "right" : "left")}: -1em;
+    ${props => (props.rtl ? 'right' : 'left')}: -1em;
     width: 16px;
     transition: box-shadow 250ms ease-in-out;
     border: 0px solid transparent;
-    border-${props => (props.rtl ? "right" : "left")}-width: 1em;
+    border-${props => (props.rtl ? 'right' : 'left')}-width: 1em;
     pointer-events: none;
 
     &.left {
@@ -1688,7 +1687,7 @@ const StyledEditor = styled("div")<{
   }
 
   .block-menu-trigger {
-    display: ${props => (props.readOnly ? "none" : "inline")};
+    display: ${props => (props.readOnly ? 'none' : 'inline')};
     width: 24px;
     height: 24px;
     color: ${props => props.theme.textSecondary};
@@ -1700,7 +1699,7 @@ const StyledEditor = styled("div")<{
     border: 0;
     padding: 0;
     margin-top: 1px;
-    margin-${props => (props.rtl ? "right" : "left")}: -24px;
+    margin-${props => (props.rtl ? 'right' : 'left')}: -24px;
 
     &:hover,
     &:focus {

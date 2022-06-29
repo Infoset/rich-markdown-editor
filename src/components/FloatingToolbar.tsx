@@ -1,12 +1,12 @@
-import * as React from "react";
-import { Portal } from "react-portal";
-import { EditorView } from "prosemirror-view";
-import useComponentSize from "../hooks/useComponentSize";
-import useMediaQuery from "../hooks/useMediaQuery";
-import useViewportHeight from "../hooks/useViewportHeight";
-import styled from "styled-components";
+import * as React from 'react';
+import { Portal } from 'react-portal';
+import { EditorView } from 'prosemirror-view';
+import useComponentSize from '../hooks/useComponentSize';
+import useMediaQuery from '../hooks/useMediaQuery';
+import useViewportHeight from '../hooks/useViewportHeight';
+import styled from 'styled-components';
 
-const SSR = typeof window === "undefined";
+const SSR = typeof window === 'undefined';
 
 type Props = {
   active?: boolean;
@@ -27,7 +27,7 @@ function usePosition({ menuRef, isSelectingText, props }) {
   const { selection } = view.state;
   const { width: menuWidth, height: menuHeight } = useComponentSize(menuRef);
   const viewportHeight = useViewportHeight();
-  const isTouchDevice = useMediaQuery("(hover: none) and (pointer: coarse)");
+  const isTouchDevice = useMediaQuery('(hover: none) and (pointer: coarse)');
 
   if (!active || !menuWidth || !menuHeight || SSR || isSelectingText) {
     return defaultPosition;
@@ -81,14 +81,14 @@ function usePosition({ menuRef, isSelectingText, props }) {
   }
 
   const isImageSelection =
-    selection.node && selection.node.type.name === "image";
+    selection.node && selection.node.type.name === 'image';
   // Images need their own positioning to get the toolbar in the center
   if (isImageSelection) {
     const element = view.nodeDOM(selection.from);
 
     // Images are wrapped which impacts positioning - need to traverse through
     // p > span > div.image
-    const imageElement = element.getElementsByTagName("img")[0];
+    const imageElement = element.getElementsByTagName('img')[0];
     const { left, top, width } = imageElement.getBoundingClientRect();
 
     return {
@@ -150,12 +150,12 @@ function FloatingToolbar(props) {
       setSelectingText(false);
     };
 
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [props.active]);
 
@@ -200,7 +200,7 @@ const Wrapper = styled.div<{
   white-space: nowrap;
 
   &::before {
-    content: "";
+    content: '';
     display: block;
     width: 24px;
     height: 24px;

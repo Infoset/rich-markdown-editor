@@ -11,14 +11,14 @@ import {
   TodoListIcon,
   InputIcon,
   HighlightIcon,
-} from "outline-icons";
-import { isInTable } from "prosemirror-tables";
-import { EditorState } from "prosemirror-state";
-import isInList from "../queries/isInList";
-import isMarkActive from "../queries/isMarkActive";
-import isNodeActive from "../queries/isNodeActive";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+} from 'outline-icons';
+import { isInTable } from 'prosemirror-tables';
+import { EditorState } from 'prosemirror-state';
+import isInList from '../queries/isInList';
+import isMarkActive from '../queries/isMarkActive';
+import isNodeActive from '../queries/isNodeActive';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 export default function formattingMenuItems(
   state: EditorState,
@@ -32,47 +32,47 @@ export default function formattingMenuItems(
 
   return [
     {
-      name: "placeholder",
+      name: 'placeholder',
       tooltip: dictionary.placeholder,
       icon: InputIcon,
       active: isMarkActive(schema.marks.placeholder),
       visible: isTemplate,
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: isTemplate,
     },
     {
-      name: "strong",
+      name: 'strong',
       tooltip: dictionary.strong,
       icon: BoldIcon,
       active: isMarkActive(schema.marks.strong),
     },
     {
-      name: "strikethrough",
+      name: 'strikethrough',
       tooltip: dictionary.strikethrough,
       icon: StrikethroughIcon,
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
-      name: "highlight",
+      name: 'highlight',
       tooltip: dictionary.mark,
       icon: HighlightIcon,
       active: isMarkActive(schema.marks.highlight),
       visible: !isTemplate,
     },
     {
-      name: "code_inline",
+      name: 'code_inline',
       tooltip: dictionary.codeInline,
       icon: CodeIcon,
       active: isMarkActive(schema.marks.code_inline),
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: allowBlocks,
     },
     {
-      name: "heading",
+      name: 'heading',
       tooltip: dictionary.heading,
       icon: Heading1Icon,
       active: isNodeActive(schema.nodes.heading, { level: 1 }),
@@ -80,7 +80,7 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
-      name: "heading",
+      name: 'heading',
       tooltip: dictionary.subheading,
       icon: Heading2Icon,
       active: isNodeActive(schema.nodes.heading, { level: 2 }),
@@ -88,7 +88,7 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
-      name: "blockquote",
+      name: 'blockquote',
       tooltip: dictionary.quote,
       icon: BlockQuoteIcon,
       active: isNodeActive(schema.nodes.blockquote),
@@ -96,39 +96,39 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "checkbox_list",
+      name: 'checkbox_list',
       tooltip: dictionary.checkboxList,
       icon: TodoListIcon,
-      keywords: "checklist checkbox task",
+      keywords: 'checklist checkbox task',
       active: isNodeActive(schema.nodes.checkbox_list),
       visible: allowBlocks || isList,
     },
     {
-      name: "bullet_list",
+      name: 'bullet_list',
       tooltip: dictionary.bulletList,
       icon: BulletedListIcon,
       active: isNodeActive(schema.nodes.bullet_list),
       visible: allowBlocks || isList,
     },
     {
-      name: "ordered_list",
+      name: 'ordered_list',
       tooltip: dictionary.orderedList,
       icon: OrderedListIcon,
       active: isNodeActive(schema.nodes.ordered_list),
       visible: allowBlocks || isList,
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "link",
+      name: 'link',
       tooltip: dictionary.createLink,
       icon: LinkIcon,
       active: isMarkActive(schema.marks.link),
-      attrs: { href: "" },
+      attrs: { href: '' },
     },
   ];
 }

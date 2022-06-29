@@ -1,10 +1,10 @@
-import assert from "assert";
-import * as React from "react";
-import { EditorView } from "prosemirror-view";
-import LinkEditor, { SearchResult } from "./LinkEditor";
-import FloatingToolbar from "./FloatingToolbar";
-import createAndInsertLink from "../commands/createAndInsertLink";
-import baseDictionary from "../dictionary";
+import assert from 'assert';
+import * as React from 'react';
+import { EditorView } from 'prosemirror-view';
+import LinkEditor, { SearchResult } from './LinkEditor';
+import FloatingToolbar from './FloatingToolbar';
+import createAndInsertLink from '../commands/createAndInsertLink';
+import baseDictionary from '../dictionary';
 
 type Props = {
   isActive: boolean;
@@ -39,11 +39,11 @@ export default class LinkToolbar extends React.Component<Props> {
   };
 
   componentDidMount() {
-    window.addEventListener("mousedown", this.handleClickOutside);
+    window.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("mousedown", this.handleClickOutside);
+    window.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   handleClickOutside = ev => {

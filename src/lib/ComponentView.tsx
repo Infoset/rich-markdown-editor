@@ -1,11 +1,11 @@
-import * as React from "react";
-import ReactDOM from "react-dom";
-import { ThemeProvider } from "styled-components";
-import { EditorView, Decoration } from "prosemirror-view";
-import Extension from "../lib/Extension";
-import Node from "../nodes/Node";
-import { light as lightTheme, dark as darkTheme } from "../theme";
-import Editor from "../";
+import { Decoration, EditorView } from 'prosemirror-view';
+import * as React from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { ThemeProvider } from 'styled-components';
+import Editor from '../';
+import Extension from '../lib/Extension';
+import Node from '../nodes/Node';
+import { dark as darkTheme, light as lightTheme } from '../theme';
 
 type Component = (options: {
   node: Node;
@@ -22,9 +22,10 @@ export default class ComponentView {
   node: Node;
   view: EditorView;
   getPos: () => number;
-  decorations: Decoration<{ [key: string]: any }>[];
+  decorations: Decoration[];
   isSelected = false;
-  dom: HTMLElement | null;
+  root: Root;
+  dom: Element;
 
   // See https://prosemirror.net/docs/ref/#view.NodeView
   constructor(
@@ -39,8 +40,8 @@ export default class ComponentView {
     this.node = node;
     this.view = view;
     this.dom = node.type.spec.inline
-      ? document.createElement("span")
-      : document.createElement("div");
+      ? document.createElement('span')
+      : document.createElement('div');
 
     this.renderElement();
   }
@@ -57,10 +58,8 @@ export default class ComponentView {
       getPos: this.getPos,
     });
 
-    ReactDOM.render(
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>,
-      this.dom
-    );
+    this.root = createRoot(this.dom);
+    this.root.render(<ThemeProvider theme={theme}>{children}</ThemeProvider>);
   }
 
   update(node) {
@@ -92,10 +91,9 @@ export default class ComponentView {
   }
 
   destroy() {
-    if (this.dom) {
-      ReactDOM.unmountComponentAtNode(this.dom);
+    if (this.root) {
+      this.root.unmount();
     }
-    this.dom = null;
   }
 
   ignoreMutation() {

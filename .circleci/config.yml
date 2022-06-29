@@ -20,13 +20,13 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v2-dependencies-
 
-      - run: yarn install --pure-lockfile
+      - run: npm ci
 
       - save_cache:
           paths:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn lint
-      - run: yarn test
+      - run: npm run lint
+      - run: npm run test
 
