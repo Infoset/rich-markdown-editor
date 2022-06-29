@@ -1,10 +1,10 @@
-import { parser } from "./server";
+import { parser } from './server';
 
-test("renders an empty doc", () => {
-  const ast = parser.parse("");
+test('renders an empty doc', () => {
+  const ast = parser.parse('');
 
-  expect(ast.toJSON()).toEqual({
-    content: [{ type: "paragraph" }],
-    type: "doc",
+  expect(ast?.toJSON()).toEqual({
+    content: [{ type: 'paragraph' }],
+    type: 'doc',
   });
 });

@@ -1,60 +1,60 @@
 /* global window File Promise */
-import * as React from "react";
-import memoize from "lodash/memoize";
-import { EditorState, Selection, Plugin } from "prosemirror-state";
-import { dropCursor } from "prosemirror-dropcursor";
-import { gapCursor } from "prosemirror-gapcursor";
-import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
-import { EditorView } from "prosemirror-view";
-import { Schema, NodeSpec, MarkSpec, Slice } from "prosemirror-model";
-import { inputRules, InputRule } from "prosemirror-inputrules";
-import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
-import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
-import { ThemeProvider } from "styled-components";
-import { light as lightTheme, dark as darkTheme } from "./styles/theme";
-import baseDictionary from "./dictionary";
-import Flex from "./components/Flex";
-import { SearchResult } from "./components/LinkEditor";
-import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar from "./components/SelectionToolbar";
-import BlockMenu from "./components/BlockMenu";
-import EmojiMenu from "./components/EmojiMenu";
-import LinkToolbar from "./components/LinkToolbar";
-import Tooltip from "./components/Tooltip";
-import Extension from "./lib/Extension";
-import ExtensionManager from "./lib/ExtensionManager";
-import ComponentView from "./lib/ComponentView";
-import headingToSlug from "./lib/headingToSlug";
+import memoize from 'lodash/memoize';
+import { baseKeymap } from 'prosemirror-commands';
+import { dropCursor } from 'prosemirror-dropcursor';
+import { gapCursor } from 'prosemirror-gapcursor';
+import { InputRule, inputRules } from 'prosemirror-inputrules';
+import { keymap } from 'prosemirror-keymap';
+import { MarkdownParser, MarkdownSerializer } from 'prosemirror-markdown';
+import { MarkSpec, NodeSpec, Schema, Slice } from 'prosemirror-model';
+import { EditorState, Plugin, Selection } from 'prosemirror-state';
+import { selectColumn, selectRow, selectTable } from 'prosemirror-utils';
+import { EditorView, NodeViewConstructor } from 'prosemirror-view';
+import * as React from 'react';
+import { ThemeProvider } from 'styled-components';
+import BlockMenu from './components/BlockMenu';
+import EmojiMenu from './components/EmojiMenu';
+import Flex from './components/Flex';
+import { SearchResult } from './components/LinkEditor';
+import LinkToolbar from './components/LinkToolbar';
+import SelectionToolbar from './components/SelectionToolbar';
+import Tooltip from './components/Tooltip';
+import baseDictionary from './dictionary';
+import ComponentView from './lib/ComponentView';
+import Extension from './lib/Extension';
+import ExtensionManager from './lib/ExtensionManager';
+import headingToSlug from './lib/headingToSlug';
+import { dark as darkTheme, light as lightTheme } from './styles/theme';
+import { EmbedDescriptor, ToastType } from './types';
 
 // styles
-import { StyledEditor } from "./styles/editor";
+import { StyledEditor } from './styles/editor';
 
 // nodes
-import ReactNode from "./nodes/ReactNode";
-import Doc from "./nodes/Doc";
-import Text from "./nodes/Text";
-import Blockquote from "./nodes/Blockquote";
-import BulletList from "./nodes/BulletList";
-import CodeBlock from "./nodes/CodeBlock";
-import CodeFence from "./nodes/CodeFence";
-import CheckboxList from "./nodes/CheckboxList";
-import Emoji from "./nodes/Emoji";
-import CheckboxItem from "./nodes/CheckboxItem";
-import Embed from "./nodes/Embed";
-import HardBreak from "./nodes/HardBreak";
-import Heading from "./nodes/Heading";
-import HorizontalRule from "./nodes/HorizontalRule";
-import Image from "./nodes/Image";
-import ListItem from "./nodes/ListItem";
-import Notice from "./nodes/Notice";
-import OrderedList from "./nodes/OrderedList";
-import Paragraph from "./nodes/Paragraph";
-import Table from "./nodes/Table";
-import TableCell from "./nodes/TableCell";
-import TableHeadCell from "./nodes/TableHeadCell";
-import TableRow from "./nodes/TableRow";
+import Blockquote from './nodes/Blockquote';
+import BulletList from './nodes/BulletList';
+import CheckboxItem from './nodes/CheckboxItem';
+import CheckboxList from './nodes/CheckboxList';
+import CodeBlock from './nodes/CodeBlock';
+import CodeFence from './nodes/CodeFence';
+import Doc from './nodes/Doc';
+import Embed from './nodes/Embed';
+import Emoji from './nodes/Emoji';
+import HardBreak from './nodes/HardBreak';
+import Heading from './nodes/Heading';
+import HorizontalRule from './nodes/HorizontalRule';
+import Image from './nodes/Image';
+import ListItem from './nodes/ListItem';
+import Notice from './nodes/Notice';
+import OrderedList from './nodes/OrderedList';
+import Paragraph from './nodes/Paragraph';
+import ReactNode from './nodes/ReactNode';
+import Table from './nodes/Table';
+import TableCell from './nodes/TableCell';
+import TableHeadCell from './nodes/TableHeadCell';
 import TableOfContents from './nodes/TableOfContents';
+import TableRow from './nodes/TableRow';
+import Text from './nodes/Text';
 
 // marks
 import Bold from './marks/Bold';
@@ -67,17 +67,17 @@ import Strikethrough from './marks/Strikethrough';
 import Underline from './marks/Underline';
 
 // plugins
-import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
-import EmojiTrigger from "./plugins/EmojiTrigger";
-import Folding from "./plugins/Folding";
-import History from "./plugins/History";
-import Keys from "./plugins/Keys";
-import MaxLength from "./plugins/MaxLength";
-import Placeholder from "./plugins/Placeholder";
-import SmartText from "./plugins/SmartText";
-import TrailingNode from "./plugins/TrailingNode";
-import PasteHandler from "./plugins/PasteHandler";
-import { PluginSimple } from "markdown-it";
+import { PluginSimple } from 'markdown-it';
+import BlockMenuTrigger from './plugins/BlockMenuTrigger';
+import EmojiTrigger from './plugins/EmojiTrigger';
+import Folding from './plugins/Folding';
+import History from './plugins/History';
+import Keys from './plugins/Keys';
+import MaxLength from './plugins/MaxLength';
+import PasteHandler from './plugins/PasteHandler';
+import Placeholder from './plugins/Placeholder';
+import SmartText from './plugins/SmartText';
+import TrailingNode from './plugins/TrailingNode';
 
 export { default as Extension } from './lib/Extension';
 export { parser, renderToHtml, schema, serializer } from './server';
@@ -91,34 +91,34 @@ export type Props = {
   placeholder: string;
   extensions?: Extension[];
   disableExtensions?: (
-    | "strong"
-    | "code_inline"
-    | "highlight"
-    | "em"
-    | "link"
-    | "placeholder"
-    | "strikethrough"
-    | "underline"
-    | "blockquote"
-    | "bullet_list"
-    | "checkbox_item"
-    | "checkbox_list"
-    | "code_block"
-    | "code_fence"
-    | "embed"
-    | "br"
-    | "heading"
-    | "hr"
-    | "image"
-    | "list_item"
-    | "container_notice"
-    | "ordered_list"
-    | "paragraph"
-    | "table"
-    | "td"
-    | "th"
-    | "tr"
-    | "emoji"
+    | 'strong'
+    | 'code_inline'
+    | 'highlight'
+    | 'em'
+    | 'link'
+    | 'placeholder'
+    | 'strikethrough'
+    | 'underline'
+    | 'blockquote'
+    | 'bullet_list'
+    | 'checkbox_item'
+    | 'checkbox_list'
+    | 'code_block'
+    | 'code_fence'
+    | 'embed'
+    | 'br'
+    | 'heading'
+    | 'hr'
+    | 'image'
+    | 'list_item'
+    | 'container_notice'
+    | 'ordered_list'
+    | 'paragraph'
+    | 'table'
+    | 'td'
+    | 'th'
+    | 'tr'
+    | 'emoji'
   )[];
   autoFocus?: boolean;
   readOnly?: boolean;
@@ -152,7 +152,7 @@ export type Props = {
   onShowToast?: (message: string, code: ToastType) => void;
   tooltip: typeof React.Component | React.FC<any>;
   className?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 };
 
 type State = {
@@ -194,7 +194,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     selectionMenuOpen: false,
     blockMenuOpen: false,
     linkMenuOpen: false,
-    blockMenuSearch: "",
+    blockMenuSearch: '',
     emojiMenuOpen: false,
   };
 

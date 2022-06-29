@@ -1,6 +1,7 @@
+import MarkdownIt from 'markdown-it';
 import customFence from 'markdown-it-container';
 
-export default function notice(md): void {
+export default function notice(md: MarkdownIt): void {
   return customFence(md, 'notice', {
     marker: ':',
     validate: () => true,

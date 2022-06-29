@@ -1,53 +1,53 @@
-import { InputRule } from "prosemirror-inputrules";
-import nameToEmoji from "gemoji/name-to-emoji.json";
-import Node from "./Node";
-import emojiRule from "../rules/emoji";
+import { InputRule } from 'prosemirror-inputrules';
+import { nameToEmoji } from 'gemoji';
+import Node from './Node';
+import emojiRule from '../rules/emoji';
 
 export default class Emoji extends Node {
   get name() {
-    return "emoji";
+    return 'emoji';
   }
 
   get schema() {
     return {
       attrs: {
         style: {
-          default: "",
+          default: '',
         },
-        "data-name": {
+        'data-name': {
           default: undefined,
         },
       },
       inline: true,
-      content: "text*",
-      marks: "",
-      group: "inline",
+      content: 'text*',
+      marks: '',
+      group: 'inline',
       selectable: false,
       parseDOM: [
         {
-          tag: "span.emoji",
-          preserveWhitespace: "full",
+          tag: 'span.emoji',
+          preserveWhitespace: 'full',
           getAttrs: (dom: HTMLDivElement) => ({
-            "data-name": dom.dataset.name,
+            'data-name': dom.dataset.name,
           }),
         },
       ],
       toDOM: node => {
-        if (nameToEmoji[node.attrs["data-name"]]) {
+        if (nameToEmoji[node.attrs['data-name']]) {
           const text = document.createTextNode(
-            nameToEmoji[node.attrs["data-name"]]
+            nameToEmoji[node.attrs['data-name']]
           );
           return [
-            "span",
+            'span',
             {
-              class: `emoji ${node.attrs["data-name"]}`,
-              "data-name": node.attrs["data-name"],
+              class: `emoji ${node.attrs['data-name']}`,
+              'data-name': node.attrs['data-name'],
             },
             text,
           ];
         }
-        const text = document.createTextNode(`:${node.attrs["data-name"]}:`);
-        return ["span", { class: "emoji" }, text];
+        const text = document.createTextNode(`:${node.attrs['data-name']}:`);
+        return ['span', { class: 'emoji' }, text];
       },
     };
   }
@@ -79,7 +79,7 @@ export default class Emoji extends Node {
             start - 1,
             end,
             type.create({
-              "data-name": markup,
+              'data-name': markup,
               markup,
             })
           );
@@ -91,7 +91,7 @@ export default class Emoji extends Node {
   }
 
   toMarkdown(state, node) {
-    const name = node.attrs["data-name"];
+    const name = node.attrs['data-name'];
     if (name) {
       state.write(`:${name}:`);
     }
@@ -99,9 +99,9 @@ export default class Emoji extends Node {
 
   parseMarkdown() {
     return {
-      node: "emoji",
+      node: 'emoji',
       getAttrs: tok => {
-        return { "data-name": tok.markup.trim() };
+        return { 'data-name': tok.markup.trim() };
       },
     };
   }
