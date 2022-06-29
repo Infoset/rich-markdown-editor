@@ -1,6 +1,6 @@
-import * as React from "react";
-import Node from "./Node";
-import embedsRule from "../rules/embeds";
+import * as React from 'react';
+import Node from './Node';
+import embedsRule from '../rules/embeds';
 
 const cache = {};
 

@@ -1,7 +1,7 @@
-import { toggleMark } from "prosemirror-commands";
-import { Plugin } from "prosemirror-state";
-import { InputRule } from "prosemirror-inputrules";
-import Mark from "./Mark";
+import { toggleMark } from 'prosemirror-commands';
+import { Plugin } from 'prosemirror-state';
+import { InputRule } from 'prosemirror-inputrules';
+import Mark from './Mark';
 
 const LINK_INPUT_REGEX = /\[([^[]+)]\((\S+)\)$/;
 

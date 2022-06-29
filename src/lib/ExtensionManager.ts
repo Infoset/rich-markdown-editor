@@ -1,13 +1,13 @@
-import { Schema } from "prosemirror-model";
-import { keymap } from "prosemirror-keymap";
-import { MarkdownParser } from "prosemirror-markdown";
-import { MarkdownSerializer } from "./markdown/serializer";
-import Editor from "../";
-import Extension from "./Extension";
-import makeRules from "./markdown/rules";
-import Node from "../nodes/Node";
-import Mark from "../marks/Mark";
-import { PluginSimple } from "markdown-it";
+import { Schema } from 'prosemirror-model';
+import { keymap } from 'prosemirror-keymap';
+import { MarkdownParser } from 'prosemirror-markdown';
+import { MarkdownSerializer } from './markdown/serializer';
+import Editor from '../';
+import Extension from './Extension';
+import makeRules from './markdown/rules';
+import Node from '../nodes/Node';
+import Mark from '../marks/Mark';
+import { PluginSimple } from 'markdown-it';
 
 export default class ExtensionManager {
   extensions: Extension[];
@@ -98,13 +98,13 @@ export default class ExtensionManager {
 
   get plugins() {
     return this.extensions
-      .filter(extension => "plugins" in extension)
+      .filter(extension => 'plugins' in extension)
       .reduce((allPlugins, { plugins }) => [...allPlugins, ...plugins], []);
   }
 
   get rulePlugins() {
     return this.extensions
-      .filter(extension => "rulePlugins" in extension)
+      .filter(extension => 'rulePlugins' in extension)
       .reduce(
         (allRulePlugins, { rulePlugins }) => [
           ...allRulePlugins,

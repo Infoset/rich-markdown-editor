@@ -96,7 +96,7 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: allowBlocks || isList,
     },
     {

@@ -20,9 +20,9 @@ import {
   createTable,
   getCellsInColumn,
   moveRow,
-} from "prosemirror-utils";
-import { Plugin, TextSelection } from "prosemirror-state";
-import tablesRule from "../rules/tables";
+} from 'prosemirror-utils';
+import { Plugin, TextSelection } from 'prosemirror-state';
+import tablesRule from '../rules/tables';
 
 export default class Table extends Node {
   get name() {

@@ -1,32 +1,32 @@
 import { refractor } from 'refractor/lib/core';
-import bash from "refractor/lang/bash";
-import css from "refractor/lang/css";
-import clike from "refractor/lang/clike";
-import csharp from "refractor/lang/csharp";
-import go from "refractor/lang/go";
-import java from "refractor/lang/java";
-import javascript from "refractor/lang/javascript";
-import json from "refractor/lang/json";
-import markup from "refractor/lang/markup";
-import objectivec from "refractor/lang/objectivec";
-import perl from "refractor/lang/perl";
-import php from "refractor/lang/php";
-import python from "refractor/lang/python";
-import powershell from "refractor/lang/powershell";
-import ruby from "refractor/lang/ruby";
-import rust from "refractor/lang/rust";
-import sql from "refractor/lang/sql";
-import typescript from "refractor/lang/typescript";
-import yaml from "refractor/lang/yaml";
+import bash from 'refractor/lang/bash';
+import css from 'refractor/lang/css';
+import clike from 'refractor/lang/clike';
+import csharp from 'refractor/lang/csharp';
+import go from 'refractor/lang/go';
+import java from 'refractor/lang/java';
+import javascript from 'refractor/lang/javascript';
+import json from 'refractor/lang/json';
+import markup from 'refractor/lang/markup';
+import objectivec from 'refractor/lang/objectivec';
+import perl from 'refractor/lang/perl';
+import php from 'refractor/lang/php';
+import python from 'refractor/lang/python';
+import powershell from 'refractor/lang/powershell';
+import ruby from 'refractor/lang/ruby';
+import rust from 'refractor/lang/rust';
+import sql from 'refractor/lang/sql';
+import typescript from 'refractor/lang/typescript';
+import yaml from 'refractor/lang/yaml';
 
-import { Selection, TextSelection, Transaction } from "prosemirror-state";
-import { textblockTypeInputRule } from "prosemirror-inputrules";
-import copy from "copy-to-clipboard";
-import Prism, { LANGUAGES } from "../plugins/Prism";
-import toggleBlockType from "../commands/toggleBlockType";
-import isInCode from "../queries/isInCode";
-import Node from "./Node";
-import { ToastType } from "../types";
+import { Selection, TextSelection, Transaction } from 'prosemirror-state';
+import { textblockTypeInputRule } from 'prosemirror-inputrules';
+import copy from 'copy-to-clipboard';
+import Prism, { LANGUAGES } from '../plugins/Prism';
+import toggleBlockType from '../commands/toggleBlockType';
+import isInCode from '../queries/isInCode';
+import Node from './Node';
+import { ToastType } from '../types';
 
 const PERSISTENCE_KEY = 'rme-code-language';
 const DEFAULT_LANGUAGE = 'javascript';
@@ -129,20 +129,17 @@ export default class CodeFence extends Node {
       'Shift-Ctrl-\\': toggleBlockType(type, schema.nodes.paragraph),
       'Shift-Enter': (state, dispatch) => {
         if (!isInCode(state)) return false;
-        const {
-          tr,
-          selection,
-        }: { tr: Transaction; selection: TextSelection } = state;
+        const { tr, selection }: { tr: Transaction; selection: TextSelection } =
+          state;
         const text = selection?.$anchor?.nodeBefore?.text;
 
-        let newText = "\n";
+        let newText = '\n';
 
         if (text) {
-          const splitByNewLine = text.split("\n");
-          const numOfSpaces = splitByNewLine[splitByNewLine.length - 1].search(
-            /\S|$/
-          );
-          newText += " ".repeat(numOfSpaces);
+          const splitByNewLine = text.split('\n');
+          const numOfSpaces =
+            splitByNewLine[splitByNewLine.length - 1].search(/\S|$/);
+          newText += ' '.repeat(numOfSpaces);
         }
 
         dispatch(tr.insertText(newText, selection.from, selection.to));

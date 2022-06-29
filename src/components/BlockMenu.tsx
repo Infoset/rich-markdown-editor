@@ -1,14 +1,14 @@
-import React from "react";
-import { findParentNode } from "prosemirror-utils";
-import CommandMenu, { Props } from "./CommandMenu";
-import BlockMenuItem from "./BlockMenuItem";
-import getMenuItems from "../menus/block";
+import React from 'react';
+import { findParentNode } from 'prosemirror-utils';
+import CommandMenu, { Props } from './CommandMenu';
+import BlockMenuItem from './BlockMenuItem';
+import getMenuItems from '../menus/block';
 
 type BlockMenuProps = Omit<
   Props,
-  "renderMenuItem" | "items" | "onClearSearch"
+  'renderMenuItem' | 'items' | 'onClearSearch'
 > &
-  Required<Pick<Props, "onLinkToolbarOpen" | "embeds">>;
+  Required<Pick<Props, 'onLinkToolbarOpen' | 'embeds'>>;
 
 class BlockMenu extends React.Component<BlockMenuProps> {
   get items() {

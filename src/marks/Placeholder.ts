@@ -1,7 +1,7 @@
-import { Plugin, TextSelection } from "prosemirror-state";
-import getMarkRange from "../queries/getMarkRange";
-import Mark from "./Mark";
-import markRule from "../rules/mark";
+import { Plugin, TextSelection } from 'prosemirror-state';
+import getMarkRange from '../queries/getMarkRange';
+import Mark from './Mark';
+import markRule from '../rules/mark';
 
 export default class Placeholder extends Mark {
   get name() {
@@ -16,7 +16,7 @@ export default class Placeholder extends Mark {
   }
 
   get rulePlugins() {
-    return [markRule({ delim: "!!", mark: "placeholder" })];
+    return [markRule({ delim: '!!', mark: 'placeholder' })];
   }
 
   get toMarkdown() {

@@ -373,13 +373,13 @@ export default class Image extends Node {
         } = this.editor.props;
 
         if (!uploadImage) {
-          throw new Error("uploadImage prop is required to replace images");
+          throw new Error('uploadImage prop is required to replace images');
         }
 
         // create an input element and click to trigger picker
-        const inputElement = document.createElement("input");
-        inputElement.type = "file";
-        inputElement.accept = "image/*";
+        const inputElement = document.createElement('input');
+        inputElement.type = 'file';
+        inputElement.accept = 'image/*';
         inputElement.onchange = (event: Event) => {
           const files = getDataTransferFiles(event);
           insertFiles(view, event, state.selection.from, files, {

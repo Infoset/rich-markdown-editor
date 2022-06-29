@@ -1,5 +1,5 @@
-import { findBlockNodes, NodeWithPos } from "prosemirror-utils";
-import { Node } from "prosemirror-model";
+import { findBlockNodes, NodeWithPos } from 'prosemirror-utils';
+import { Node } from 'prosemirror-model';
 
 export default function findCollapsedNodes(doc: Node): NodeWithPos[] {
   const blocks = findBlockNodes(doc);
@@ -8,7 +8,7 @@ export default function findCollapsedNodes(doc: Node): NodeWithPos[] {
   let withinCollapsedHeading;
 
   for (const block of blocks) {
-    if (block.node.type.name === "heading") {
+    if (block.node.type.name === 'heading') {
       if (
         !withinCollapsedHeading ||
         block.node.attrs.level <= withinCollapsedHeading

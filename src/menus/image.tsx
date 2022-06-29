@@ -60,14 +60,14 @@ export default function imageMenuItems(
       active: () => false,
     },
     {
-      name: "replaceImage",
+      name: 'replaceImage',
       tooltip: dictionary.replaceImage,
       icon: ReplaceIcon,
       visible: true,
       active: () => false,
     },
     {
-      name: "deleteImage",
+      name: 'deleteImage',
       tooltip: dictionary.deleteImage,
       icon: TrashIcon,
       visible: true,

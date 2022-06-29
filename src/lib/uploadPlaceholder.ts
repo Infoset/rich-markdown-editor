@@ -1,5 +1,5 @@
-import { EditorState, Plugin } from "prosemirror-state";
-import { Decoration, DecorationSet } from "prosemirror-view";
+import { EditorState, Plugin } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
 
 // based on the example at: https://prosemirror.net/examples/upload/
 const uploadPlaceholder = new Plugin({
@@ -18,12 +18,12 @@ const uploadPlaceholder = new Plugin({
         if (action.add.replaceExisting) {
           const $pos = tr.doc.resolve(action.add.pos);
 
-          if ($pos.nodeAfter?.type.name === "image") {
+          if ($pos.nodeAfter?.type.name === 'image') {
             const deco = Decoration.node(
               $pos.pos,
               $pos.pos + $pos.nodeAfter.nodeSize,
               {
-                class: "image-replacement-uploading",
+                class: 'image-replacement-uploading',
               },
               {
                 id: action.add.id,
@@ -32,10 +32,10 @@ const uploadPlaceholder = new Plugin({
             set = set.add(tr.doc, [deco]);
           }
         } else {
-          const element = document.createElement("div");
-          element.className = "image placeholder";
+          const element = document.createElement('div');
+          element.className = 'image placeholder';
 
-          const img = document.createElement("img");
+          const img = document.createElement('img');
           img.src = URL.createObjectURL(action.add.file);
 
           element.appendChild(img);

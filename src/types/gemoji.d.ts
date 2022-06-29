@@ -1,1 +1,1 @@
-declare module "gemoji";
+declare module 'gemoji';

@@ -1,6 +1,6 @@
-import * as React from "react";
-import BlockMenuItem, { Props as BlockMenuItemProps } from "./BlockMenuItem";
-import styled from "styled-components";
+import * as React from 'react';
+import BlockMenuItem, { Props as BlockMenuItemProps } from './BlockMenuItem';
+import styled from 'styled-components';
 
 const Emoji = styled.span`
   font-size: 16px;
@@ -22,7 +22,7 @@ const EmojiTitle = ({
   );
 };
 
-type EmojiMenuItemProps = Omit<BlockMenuItemProps, "shortcut" | "theme"> & {
+type EmojiMenuItemProps = Omit<BlockMenuItemProps, 'shortcut' | 'theme'> & {
   emoji: string;
 };
 

@@ -1,7 +1,7 @@
-import { toggleMark } from "prosemirror-commands";
-import markInputRule from "../lib/markInputRule";
-import Mark from "./Mark";
-import underlinesRule from "../rules/underlines";
+import { toggleMark } from 'prosemirror-commands';
+import markInputRule from '../lib/markInputRule';
+import Mark from './Mark';
+import underlinesRule from '../rules/underlines';
 
 export default class Underline extends Mark {
   get name() {

@@ -2,9 +2,9 @@ import {
   splitListItem,
   sinkListItem,
   liftListItem,
-} from "prosemirror-schema-list";
-import Node from "./Node";
-import checkboxRule from "../rules/checkboxes";
+} from 'prosemirror-schema-list';
+import Node from './Node';
+import checkboxRule from '../rules/checkboxes';
 
 export default class CheckboxItem extends Node {
   get name() {

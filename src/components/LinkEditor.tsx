@@ -8,15 +8,15 @@ import {
   PlusIcon,
   TrashIcon,
   OpenIcon,
-} from "outline-icons";
-import styled, { withTheme } from "styled-components";
-import isUrl from "../lib/isUrl";
-import theme from "../styles/theme";
-import Flex from "./Flex";
-import Input from "./Input";
-import ToolbarButton from "./ToolbarButton";
-import LinkSearchResult from "./LinkSearchResult";
-import baseDictionary from "../dictionary";
+} from 'outline-icons';
+import styled, { withTheme } from 'styled-components';
+import isUrl from '../lib/isUrl';
+import theme from '../styles/theme';
+import Flex from './Flex';
+import Input from './Input';
+import ToolbarButton from './ToolbarButton';
+import LinkSearchResult from './LinkSearchResult';
+import baseDictionary from '../dictionary';
 
 export type SearchResult = {
   title: string;
@@ -113,9 +113,9 @@ class LinkEditor extends React.Component<Props, State> {
     // likely an absolute URL that was entered without one.
     if (
       !isUrl(href) &&
-      !href.startsWith("/") &&
-      !href.startsWith("#") &&
-      !href.startsWith("mailto:")
+      !href.startsWith('/') &&
+      !href.startsWith('#') &&
+      !href.startsWith('mailto:')
     ) {
       href = `https://${href}`;
     }

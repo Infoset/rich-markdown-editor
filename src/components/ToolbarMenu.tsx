@@ -1,10 +1,10 @@
-import * as React from "react";
-import { EditorView } from "prosemirror-view";
-import styled, { withTheme } from "styled-components";
-import ToolbarButton from "./ToolbarButton";
-import ToolbarSeparator from "./ToolbarSeparator";
-import theme from "../styles/theme";
-import { MenuItem } from "../types";
+import * as React from 'react';
+import { EditorView } from 'prosemirror-view';
+import styled, { withTheme } from 'styled-components';
+import ToolbarButton from './ToolbarButton';
+import ToolbarSeparator from './ToolbarSeparator';
+import theme from '../styles/theme';
+import { MenuItem } from '../types';
 
 type Props = {
   tooltip: typeof React.Component | React.FC<any>;

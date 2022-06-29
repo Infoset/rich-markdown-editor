@@ -1,6 +1,6 @@
-import * as React from "react";
-import { dark, light } from "../styles/theme";
-import Editor from "..";
+import * as React from 'react';
+import { dark, light } from '../styles/theme';
+import Editor from '..';
 
 const docSearchResults = [
   {

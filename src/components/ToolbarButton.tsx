@@ -33,12 +33,12 @@ export default styled.button<Props>`
 
   &:before {
     position: absolute;
-    content: "";
+    content: '';
     top: -4px;
     right: -4px;
     left: -4px;
     bottom: -4px;
   }
 
-  ${props => props.active && "opacity: 1;"};
+  ${props => props.active && 'opacity: 1;'};
 `;

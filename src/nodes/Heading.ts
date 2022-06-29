@@ -1,15 +1,15 @@
-import { Plugin, Selection } from "prosemirror-state";
-import copy from "copy-to-clipboard";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
-import { textblockTypeInputRule } from "prosemirror-inputrules";
-import { MarkdownSerializerState } from "prosemirror-markdown";
-import backspaceToParagraph from "../commands/backspaceToParagraph";
-import toggleBlockType from "../commands/toggleBlockType";
-import splitHeading from "../commands/splitHeading";
-import headingToSlug, { headingToPersistenceKey } from "../lib/headingToSlug";
-import Node from "./Node";
-import { ToastType } from "../types";
+import { Plugin, Selection } from 'prosemirror-state';
+import copy from 'copy-to-clipboard';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { Node as ProsemirrorNode, NodeType } from 'prosemirror-model';
+import { textblockTypeInputRule } from 'prosemirror-inputrules';
+import { MarkdownSerializerState } from 'prosemirror-markdown';
+import backspaceToParagraph from '../commands/backspaceToParagraph';
+import toggleBlockType from '../commands/toggleBlockType';
+import splitHeading from '../commands/splitHeading';
+import headingToSlug, { headingToPersistenceKey } from '../lib/headingToSlug';
+import Node from './Node';
+import { ToastType } from '../types';
 
 export default class Heading extends Node {
   className = 'heading-name';
@@ -45,11 +45,11 @@ export default class Heading extends Node {
         contentElement: '.heading-content',
       })),
       toDOM: node => {
-        const anchor = document.createElement("button");
-        anchor.innerText = "#";
-        anchor.type = "button";
-        anchor.className = "heading-anchor";
-        anchor.addEventListener("click", event => this.handleCopyLink(event));
+        const anchor = document.createElement('button');
+        anchor.innerText = '#';
+        anchor.type = 'button';
+        anchor.className = 'heading-anchor';
+        anchor.addEventListener('click', event => this.handleCopyLink(event));
 
         const fold = document.createElement('button');
         fold.innerText = '';
@@ -59,7 +59,7 @@ export default class Heading extends Node {
         fold.className = `heading-fold ${
           node.attrs.collapsed ? 'collapsed' : ''
         }`;
-        fold.addEventListener("mousedown", event =>
+        fold.addEventListener('mousedown', event =>
           this.handleFoldContent(event)
         );
 

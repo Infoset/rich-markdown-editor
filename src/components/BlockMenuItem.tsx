@@ -1,7 +1,7 @@
-import * as React from "react";
-import scrollIntoView from "smooth-scroll-into-view-if-needed";
-import styled, { withTheme } from "styled-components";
-import theme from "../styles/theme";
+import * as React from 'react';
+import scrollIntoView from 'smooth-scroll-into-view-if-needed';
+import styled, { withTheme } from 'styled-components';
+import theme from '../styles/theme';
 
 export type Props = {
   selected: boolean;
@@ -21,7 +21,7 @@ function BlockMenuItem({
   title,
   shortcut,
   icon,
-  containerId = "block-menu-container",
+  containerId = 'block-menu-container',
 }: Props) {
   const Icon = icon;
 
@@ -87,7 +87,7 @@ const MenuItem = styled.button<{
     props.selected
       ? props.theme.blockToolbarSelectedBackground ||
         props.theme.blockToolbarTrigger
-      : "none"};
+      : 'none'};
   padding: 0 16px;
   outline: none;
 
