@@ -1,6 +1,7 @@
 import {
   TrashIcon,
   DownloadIcon,
+  ReplaceIcon,
   AlignImageLeftIcon,
   AlignImageRightIcon,
   AlignImageCenterIcon,
@@ -59,7 +60,14 @@ export default function imageMenuItems(
       active: () => false,
     },
     {
-      name: 'deleteImage',
+      name: "replaceImage",
+      tooltip: dictionary.replaceImage,
+      icon: ReplaceIcon,
+      visible: true,
+      active: () => false,
+    },
+    {
+      name: "deleteImage",
       tooltip: dictionary.deleteImage,
       icon: TrashIcon,
       visible: true,

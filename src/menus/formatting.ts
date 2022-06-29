@@ -96,7 +96,8 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
-      name: 'separator',
+      name: "separator",
+      visible: allowBlocks || isList,
     },
     {
       name: 'checkbox_list',

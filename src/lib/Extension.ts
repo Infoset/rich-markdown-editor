@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { InputRule } from 'prosemirror-inputrules';
-import { Plugin } from 'prosemirror-state';
-import Editor from '../';
+import { InputRule } from "prosemirror-inputrules";
+import { Plugin } from "prosemirror-state";
+import Editor from "../";
+import { PluginSimple } from "markdown-it";
 
 type Command = (attrs) => (state, dispatch) => any;
 
@@ -29,6 +30,10 @@ export default class Extension {
   }
 
   get plugins(): Plugin[] {
+    return [];
+  }
+
+  get rulePlugins(): PluginSimple[] {
     return [];
   }
 

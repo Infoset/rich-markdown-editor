@@ -1,11 +1,11 @@
-import { Decoration, EditorView } from 'prosemirror-view';
-import * as React from 'react';
+import * as React from "react";
 import { createRoot, Root } from 'react-dom/client';
-import { ThemeProvider } from 'styled-components';
-import Editor from '../';
-import Extension from '../lib/Extension';
-import Node from '../nodes/Node';
-import { dark as darkTheme, light as lightTheme } from '../theme';
+import { ThemeProvider } from "styled-components";
+import { EditorView, Decoration } from "prosemirror-view";
+import Extension from "../lib/Extension";
+import Node from "../nodes/Node";
+import { light as lightTheme, dark as darkTheme } from "../styles/theme";
+import Editor from "../";
 
 type Component = (options: {
   node: Node;

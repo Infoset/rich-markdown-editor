@@ -15,6 +15,8 @@ export default styled.button<Props>`
   padding: 0;
   opacity: 0.7;
   outline: none;
+  pointer-events: all;
+  position: relative;
 
   &:first-child {
     margin-left: 0;
@@ -29,5 +31,14 @@ export default styled.button<Props>`
     cursor: default;
   }
 
-  ${props => props.active && 'opacity: 1;'};
+  &:before {
+    position: absolute;
+    content: "";
+    top: -4px;
+    right: -4px;
+    left: -4px;
+    bottom: -4px;
+  }
+
+  ${props => props.active && "opacity: 1;"};
 `;

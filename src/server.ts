@@ -3,27 +3,28 @@ import ExtensionManager from './lib/ExtensionManager';
 import render from './lib/renderToHtml';
 
 // nodes
-import Doc from './nodes/Doc';
-import Text from './nodes/Text';
-import Blockquote from './nodes/Blockquote';
-import BulletList from './nodes/BulletList';
-import CodeBlock from './nodes/CodeBlock';
-import CodeFence from './nodes/CodeFence';
-import CheckboxList from './nodes/CheckboxList';
-import CheckboxItem from './nodes/CheckboxItem';
-import Embed from './nodes/Embed';
-import HardBreak from './nodes/HardBreak';
-import Heading from './nodes/Heading';
-import HorizontalRule from './nodes/HorizontalRule';
-import Image from './nodes/Image';
-import ListItem from './nodes/ListItem';
-import Notice from './nodes/Notice';
-import OrderedList from './nodes/OrderedList';
-import Paragraph from './nodes/Paragraph';
-import Table from './nodes/Table';
-import TableCell from './nodes/TableCell';
-import TableHeadCell from './nodes/TableHeadCell';
-import TableRow from './nodes/TableRow';
+import Doc from "./nodes/Doc";
+import Text from "./nodes/Text";
+import Blockquote from "./nodes/Blockquote";
+import Emoji from "./nodes/Emoji";
+import BulletList from "./nodes/BulletList";
+import CodeBlock from "./nodes/CodeBlock";
+import CodeFence from "./nodes/CodeFence";
+import CheckboxList from "./nodes/CheckboxList";
+import CheckboxItem from "./nodes/CheckboxItem";
+import Embed from "./nodes/Embed";
+import HardBreak from "./nodes/HardBreak";
+import Heading from "./nodes/Heading";
+import HorizontalRule from "./nodes/HorizontalRule";
+import Image from "./nodes/Image";
+import ListItem from "./nodes/ListItem";
+import Notice from "./nodes/Notice";
+import OrderedList from "./nodes/OrderedList";
+import Paragraph from "./nodes/Paragraph";
+import Table from "./nodes/Table";
+import TableCell from "./nodes/TableCell";
+import TableHeadCell from "./nodes/TableHeadCell";
+import TableRow from "./nodes/TableRow";
 import TableOfContents from './nodes/TableOfContents';
 
 // marks
@@ -43,6 +44,7 @@ const extensions = new ExtensionManager([
   new Paragraph(),
   new Blockquote(),
   new TableOfContents(),
+  new Emoji(),
   new BulletList(),
   new CodeBlock(),
   new CodeFence(),
@@ -76,8 +78,10 @@ export const schema = new Schema({
 
 export const parser = extensions.parser({
   schema,
+  plugins: extensions.rulePlugins,
 });
 
 export const serializer = extensions.serializer();
 
-export const renderToHtml = render;
+export const renderToHtml = (markdown: string): string =>
+  render(markdown, extensions.rulePlugins);

@@ -7,23 +7,26 @@ import { RefractorElement, Text } from 'refractor';
 import { refractor } from 'refractor/lib/core';
 
 export const LANGUAGES = {
-  none: 'None', // additional entry to disable highlighting
-  bash: 'Bash',
-  css: 'CSS',
-  clike: 'C',
-  csharp: 'C#',
-  go: 'Go',
-  markup: 'HTML',
-  java: 'Java',
-  javascript: 'JavaScript',
-  json: 'JSON',
-  php: 'PHP',
-  powershell: 'Powershell',
-  python: 'Python',
-  ruby: 'Ruby',
-  sql: 'SQL',
-  typescript: 'TypeScript',
-  yaml: 'YAML',
+  none: "None", // additional entry to disable highlighting
+  bash: "Bash",
+  css: "CSS",
+  clike: "C",
+  csharp: "C#",
+  go: "Go",
+  markup: "HTML",
+  objectivec: "Objective-C",
+  java: "Java",
+  javascript: "JavaScript",
+  json: "JSON",
+  perl: "Perl",
+  php: "PHP",
+  powershell: "Powershell",
+  python: "Python",
+  ruby: "Ruby",
+  rust: "Rust",
+  sql: "SQL",
+  typescript: "TypeScript",
+  yaml: "YAML",
 };
 
 type ParsedNode = {
@@ -115,13 +118,14 @@ export default function Prism({ name }) {
       init: (_, { doc }) => {
         return DecorationSet.create(doc, []);
       },
-      apply: (transaction, decorationSet, oldState, state) => {
+      apply: (transaction: Transaction, decorationSet, oldState, state) => {
         const nodeName = state.selection.$head.parent.type.name;
         const previousNodeName = oldState.selection.$head.parent.type.name;
         const codeBlockChanged =
           transaction.docChanged && [nodeName, previousNodeName].includes(name);
+        const ySyncEdit = !!transaction.getMeta("y-sync$");
 
-        if (!highlighted || codeBlockChanged) {
+        if (!highlighted || codeBlockChanged || ySyncEdit) {
           highlighted = true;
           return getDecorations({ doc: transaction.doc, name });
         }

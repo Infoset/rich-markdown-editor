@@ -1,27 +1,32 @@
-import copy from 'copy-to-clipboard';
-import { textblockTypeInputRule } from 'prosemirror-inputrules';
-import bash from 'refractor/lang/bash';
-import clike from 'refractor/lang/clike';
-import csharp from 'refractor/lang/csharp';
-import css from 'refractor/lang/css';
-import go from 'refractor/lang/go';
-import java from 'refractor/lang/java';
-import javascript from 'refractor/lang/javascript';
-import json from 'refractor/lang/json';
-import markup from 'refractor/lang/markup';
-import php from 'refractor/lang/php';
-import powershell from 'refractor/lang/powershell';
-import python from 'refractor/lang/python';
-import ruby from 'refractor/lang/ruby';
-import sql from 'refractor/lang/sql';
-import typescript from 'refractor/lang/typescript';
-import yaml from 'refractor/lang/yaml';
 import { refractor } from 'refractor/lib/core';
-import toggleBlockType from '../commands/toggleBlockType';
-import Prism, { LANGUAGES } from '../plugins/Prism';
-import isInCode from '../queries/isInCode';
-import { ToastType } from '../types';
-import Node from './Node';
+import bash from "refractor/lang/bash";
+import css from "refractor/lang/css";
+import clike from "refractor/lang/clike";
+import csharp from "refractor/lang/csharp";
+import go from "refractor/lang/go";
+import java from "refractor/lang/java";
+import javascript from "refractor/lang/javascript";
+import json from "refractor/lang/json";
+import markup from "refractor/lang/markup";
+import objectivec from "refractor/lang/objectivec";
+import perl from "refractor/lang/perl";
+import php from "refractor/lang/php";
+import python from "refractor/lang/python";
+import powershell from "refractor/lang/powershell";
+import ruby from "refractor/lang/ruby";
+import rust from "refractor/lang/rust";
+import sql from "refractor/lang/sql";
+import typescript from "refractor/lang/typescript";
+import yaml from "refractor/lang/yaml";
+
+import { Selection, TextSelection, Transaction } from "prosemirror-state";
+import { textblockTypeInputRule } from "prosemirror-inputrules";
+import copy from "copy-to-clipboard";
+import Prism, { LANGUAGES } from "../plugins/Prism";
+import toggleBlockType from "../commands/toggleBlockType";
+import isInCode from "../queries/isInCode";
+import Node from "./Node";
+import { ToastType } from "../types";
 
 const PERSISTENCE_KEY = 'rme-code-language';
 const DEFAULT_LANGUAGE = 'javascript';
@@ -36,10 +41,13 @@ const DEFAULT_LANGUAGE = 'javascript';
   javascript,
   json,
   markup,
+  objectivec,
+  perl,
   php,
   python,
   powershell,
   ruby,
+  rust,
   sql,
   typescript,
   yaml,
@@ -121,9 +129,23 @@ export default class CodeFence extends Node {
       'Shift-Ctrl-\\': toggleBlockType(type, schema.nodes.paragraph),
       'Shift-Enter': (state, dispatch) => {
         if (!isInCode(state)) return false;
+        const {
+          tr,
+          selection,
+        }: { tr: Transaction; selection: TextSelection } = state;
+        const text = selection?.$anchor?.nodeBefore?.text;
 
-        const { tr, selection } = state;
-        dispatch(tr.insertText('\n', selection.from, selection.to));
+        let newText = "\n";
+
+        if (text) {
+          const splitByNewLine = text.split("\n");
+          const numOfSpaces = splitByNewLine[splitByNewLine.length - 1].search(
+            /\S|$/
+          );
+          newText += " ".repeat(numOfSpaces);
+        }
+
+        dispatch(tr.insertText(newText, selection.from, selection.to));
         return true;
       },
       Tab: (state, dispatch) => {
@@ -165,9 +187,12 @@ export default class CodeFence extends Node {
 
     if (result) {
       const language = element.value;
-      const transaction = tr.setNodeMarkup(result.inside, undefined, {
-        language,
-      });
+
+      const transaction = tr
+        .setSelection(Selection.near(view.state.doc.resolve(result.inside)))
+        .setNodeMarkup(result.inside, undefined, {
+          language,
+        });
       view.dispatch(transaction);
 
       localStorage?.setItem(PERSISTENCE_KEY, language);

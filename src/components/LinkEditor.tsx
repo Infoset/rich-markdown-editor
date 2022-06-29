@@ -8,15 +8,15 @@ import {
   PlusIcon,
   TrashIcon,
   OpenIcon,
-} from 'outline-icons';
-import styled, { withTheme } from 'styled-components';
-import isUrl from '../lib/isUrl';
-import theme from '../theme';
-import Flex from './Flex';
-import Input from './Input';
-import ToolbarButton from './ToolbarButton';
-import LinkSearchResult from './LinkSearchResult';
-import baseDictionary from '../dictionary';
+} from "outline-icons";
+import styled, { withTheme } from "styled-components";
+import isUrl from "../lib/isUrl";
+import theme from "../styles/theme";
+import Flex from "./Flex";
+import Input from "./Input";
+import ToolbarButton from "./ToolbarButton";
+import LinkSearchResult from "./LinkSearchResult";
+import baseDictionary from "../dictionary";
 
 export type SearchResult = {
   title: string;
@@ -109,9 +109,14 @@ class LinkEditor extends React.Component<Props, State> {
     this.discardInputValue = true;
     const { from, to } = this.props;
 
-    // If the input doesn't start with a protocol or relative slash, make sure
-    // a protocol is added to the beginning
-    if (!isUrl(href) && !href.startsWith('/') && !href.startsWith('#')) {
+    // Make sure a protocol is added to the beginning of the input if it's
+    // likely an absolute URL that was entered without one.
+    if (
+      !isUrl(href) &&
+      !href.startsWith("/") &&
+      !href.startsWith("#") &&
+      !href.startsWith("mailto:")
+    ) {
       href = `https://${href}`;
     }
 
@@ -362,6 +367,7 @@ const Wrapper = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
   min-width: 336px;
+  pointer-events: all;
 `;
 
 const SearchResults = styled.ol`

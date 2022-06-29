@@ -5,9 +5,11 @@
 # rich-markdown-editor
 
 A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Outline](http://getoutline.com) and can also be used for displaying content in a read-only fashion.
-The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
+The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown. See the **[Live demo storybook](https://rich-markdown-editor-demo.onrender.com/)**.
 
-> Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
+> Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline.
+
+
 
 ## Usage
 
@@ -84,7 +86,7 @@ List of included extension names to disable. Removes corresponding menu items an
 
 #### `theme`
 
-Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/theme.ts) for an example of the keys that should be provided.
+Allows overriding the inbuilt theme to brand the editor, for example use your own font face and brand colors to have the editor fit within your application. See the [inbuilt theme](/src/styles/theme.ts) for an example of the keys that should be provided.
 
 #### `dictionary`
 
@@ -92,7 +94,7 @@ Allows overriding the inbuilt copy dictionary, for example to internationalize t
 
 #### `dark`
 
-With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/theme.ts).
+With `dark` set to `true` the editor will use a default dark theme that's included. See the [source here](/src/styles/theme.ts).
 
 #### `dir`
 
