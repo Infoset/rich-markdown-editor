@@ -1,7 +1,7 @@
-import { ellipsis, smartQuotes, InputRule } from 'prosemirror-inputrules';
+import { ellipsis, smartQuotes } from 'prosemirror-inputrules';
 import Extension from '../lib/Extension';
 
-const rightArrow = new InputRule(/->$/, '→');
+// const rightArrow = new InputRule(/->$/, '→');
 
 export default class SmartText extends Extension {
   get name() {
@@ -9,6 +9,7 @@ export default class SmartText extends Extension {
   }
 
   inputRules() {
-    return [rightArrow, ellipsis, ...smartQuotes];
+    // return [rightArrow, ellipsis, ...smartQuotes];
+    return [ellipsis, ...smartQuotes];
   }
 }

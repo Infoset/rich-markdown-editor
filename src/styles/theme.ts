@@ -56,11 +56,11 @@ export const base = {
   blockToolbarHoverBackground: colors.greyLight,
   blockToolbarDivider: colors.greyMid,
 
-  noticeInfoBackground: '#F5BE31',
+  noticeInfoBackground: '#C7D4FF',
   noticeInfoText: colors.almostBlack,
-  noticeTipBackground: '#4C65ff',
+  noticeTipBackground: '#4C65FF',
   noticeTipText: colors.white,
-  noticeWarningBackground: '#FF5C80',
+  noticeWarningBackground: '#FA8C16',
   noticeWarningText: colors.white,
 };
 

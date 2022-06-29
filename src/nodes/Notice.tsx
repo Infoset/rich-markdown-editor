@@ -1,10 +1,10 @@
+import { InfoIcon, StarredIcon, WarningIcon } from 'outline-icons';
 import { wrappingInputRule } from 'prosemirror-inputrules';
-import toggleWrap from '../commands/toggleWrap';
-import { WarningIcon, InfoIcon, StarredIcon } from 'outline-icons';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import Node from './Node';
+import toggleWrap from '../commands/toggleWrap';
 import noticesRule from '../rules/notices';
+import Node from './Node';
 
 export default class Notice extends Node {
   get styleOptions() {

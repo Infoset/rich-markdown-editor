@@ -115,6 +115,7 @@ export type Props = {
     | 'ordered_list'
     | 'paragraph'
     | 'table'
+    | 'table_of_contents'
     | 'td'
     | 'th'
     | 'tr'
@@ -315,7 +316,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
           new HardBreak(),
           new Paragraph(),
           new Blockquote(),
-          new TableOfContents(),
+          new TableOfContents({
+            dictionary,
+          }),
           new CodeBlock({
             dictionary,
             onShowToast: this.props.onShowToast,

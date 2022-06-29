@@ -1,3 +1,5 @@
+import { InputRule } from 'prosemirror-inputrules';
+import tableOfContentsRule from '../rules/tableOfContents';
 import Node from './Node';
 
 export default class TableOfContents extends Node {
@@ -12,22 +14,53 @@ export default class TableOfContents extends Node {
           default: '<!-- toc -->',
         },
       },
-      selectable: false,
       group: 'block',
-      parseDOM: [{ tag: 'table_of_contents' }],
-      toDOM: () => ['table_of_contents'],
+      parseDOM: [{ tag: 'table-of-contents' }],
+      toDOM: () => [
+        'table-of-contents',
+        {
+          style:
+            'display: block; padding: 1em; margin: 1em 0; background: #f9f9f9;',
+        },
+        ['strong', this.options.dictionary.tableOfContents],
+        ['br'],
+        '∙ ...',
+        ['br'],
+        '∙ ...',
+      ],
     };
   }
 
+  get rulePlugins() {
+    return [tableOfContentsRule];
+  }
+
   commands({ type }) {
-    return () => (state, dispatch) => {
-      dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
+    return attrs => (state, dispatch) => {
+      dispatch(
+        state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+      );
       return true;
     };
   }
 
-  toMarkdown(state) {
-    state.write(`<!-- toc -->`);
+  inputRules({ type }) {
+    return [
+      new InputRule(/<!-- toc -->$/, (state, match, start, end) => {
+        const { tr } = state;
+
+        if (match[0]) {
+          tr.replaceWith(start - 1, end, type.create());
+        }
+
+        return tr;
+      }),
+    ];
+  }
+
+  toMarkdown(state, node) {
+    state.write(`\n${node.attrs.markup}`);
+    state.closeBlock(node);
   }
 
   parseMarkdown() {

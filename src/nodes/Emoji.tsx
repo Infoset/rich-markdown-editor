@@ -93,16 +93,15 @@ export default class Emoji extends Node {
   toMarkdown(state, node) {
     const name = node.attrs['data-name'];
     if (name) {
-      state.write(`:${name}:`);
+      // state.write(`:${name}:`);
+      state.write(nameToEmoji[name]);
     }
   }
 
   parseMarkdown() {
     return {
       node: 'emoji',
-      getAttrs: tok => {
-        return { 'data-name': tok.markup.trim() };
-      },
+      getAttrs: tok => ({ 'data-name': tok.markup.trim() }),
     };
   }
 }

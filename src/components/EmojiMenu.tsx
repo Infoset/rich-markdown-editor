@@ -1,5 +1,5 @@
 import React from 'react';
-import gemojies from 'gemoji';
+import { Gemoji, gemoji } from 'gemoji';
 import FuzzySearch from 'fuzzy-search';
 import CommandMenu, { Props } from './CommandMenu';
 import EmojiMenuItem from './EmojiMenuItem';
@@ -12,12 +12,8 @@ type Emoji = {
   attrs: { markup: string; 'data-name': string };
 };
 
-const searcher = new FuzzySearch<{
-  names: string[];
-  description: string;
-  emoji: string;
-}>(gemojies, ['names'], {
-  caseSensitive: true,
+const searcher = new FuzzySearch<Gemoji>(gemoji, ['names'], {
+  caseSensitive: false,
   sort: true,
 });
 

@@ -234,3 +234,16 @@ RTL.args = {
 - [x] آیتم اول
 - [ ] آیتم دوم`,
 };
+
+export const TableOfContents = Template.bind({});
+TableOfContents.args = {
+  defaultValue: `# Table of Contents
+
+<!-- toc -->
+
+`,
+  onChange: debounce(value => {
+    const text = value();
+    console.log({ text });
+  }, 250),
+};
