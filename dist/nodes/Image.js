@@ -51,7 +51,7 @@ const uploadPlugin = options => new prosemirror_state_1.Plugin({
                     .call(event.clipboardData.items)
                     .map(dt => dt.getAsFile())
                     .filter(file => file);
-                if (files.length === 0)
+                if (files.length === 0 || event.clipboardData.getData('text'))
                     return false;
                 const { tr } = view.state;
                 if (!tr.selection.empty) {

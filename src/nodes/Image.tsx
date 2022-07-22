@@ -40,7 +40,9 @@ const uploadPlugin = options =>
             .map(dt => dt.getAsFile())
             .filter(file => file);
 
-          if (files.length === 0) return false;
+          // if clipboard has text, let PasteHandler handle it
+          if (files.length === 0 || event.clipboardData.getData('text'))
+            return false;
 
           const { tr } = view.state;
           if (!tr.selection.empty) {

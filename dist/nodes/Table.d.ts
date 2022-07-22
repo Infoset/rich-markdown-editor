@@ -47,8 +47,8 @@ export default class Table extends Node {
         fixTables: () => typeof fixTables;
     };
     keys(): {
-        Tab: (state: any, dispatch?: ((tr: any) => void) | undefined) => boolean;
-        'Shift-Tab': (state: any, dispatch?: ((tr: any) => void) | undefined) => boolean;
+        Tab: (state: import("prosemirror-state").EditorState, dispatch?: ((tr: import("prosemirror-state").Transaction) => void) | undefined) => boolean;
+        'Shift-Tab': (state: import("prosemirror-state").EditorState, dispatch?: ((tr: import("prosemirror-state").Transaction) => void) | undefined) => boolean;
         Enter: (state: any, dispatch: any) => boolean;
     };
     toMarkdown(state: any, node: any): void;

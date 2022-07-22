@@ -75,8 +75,6 @@ export default class ExtensionManager {
         const md = extension.parseMarkdown();
         if (!md) return nodes;
 
-        console.log(extension.name, md);
-
         return {
           ...nodes,
           [extension.markdownToken || extension.name]: md,
