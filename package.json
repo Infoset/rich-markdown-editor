@@ -44,7 +44,7 @@
     "prosemirror-model": "^1.18.1",
     "prosemirror-schema-list": "^1.2.1",
     "prosemirror-state": "^1.4.1",
-    "prosemirror-tables": "^1.2.4",
+    "prosemirror-tables": "npm:prosemirror-tables-contently",
     "prosemirror-transform": "1.6.0",
     "prosemirror-utils": "^0.9.6",
     "prosemirror-view": "1.27.0",
@@ -112,10 +112,11 @@
     "tsc-watch": "^5.0.3",
     "typescript": "4.7.4"
   },
-  "resolutions": {
+  "overrides": {
     "markdown-it": "^13.0.1",
     "prosemirror-transform": "1.6.0",
-    "yargs-parser": "^15.0.1"
+    "yargs-parser": "^15.0.1",
+    "prosemirror-tables": "npm:prosemirror-tables-contently"
   },
   "repository": {
     "type": "git",
