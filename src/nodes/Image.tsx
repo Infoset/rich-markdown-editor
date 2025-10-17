@@ -25,10 +25,7 @@ const uploadPlugin = options =>
     props: {
       handleDOMEvents: {
         paste(view, event: ClipboardEvent): boolean {
-          if (
-            (view.props.editable && !view.props.editable(view.state)) ||
-            !options.uploadImage
-          ) {
+          if ((view.props.editable && !view.props.editable(view.state)) || !options.uploadImage) {
             return false;
           }
 
@@ -41,8 +38,7 @@ const uploadPlugin = options =>
             .filter(file => file);
 
           // if clipboard has text, let PasteHandler handle it
-          if (files.length === 0 || event.clipboardData.getData('text'))
-            return false;
+          if (files.length === 0 || event.clipboardData.getData('text')) return false;
 
           const { tr } = view.state;
           if (!tr.selection.empty) {
@@ -54,17 +50,12 @@ const uploadPlugin = options =>
           return true;
         },
         drop(view, event: DragEvent): boolean {
-          if (
-            (view.props.editable && !view.props.editable(view.state)) ||
-            !options.uploadImage
-          ) {
+          if ((view.props.editable && !view.props.editable(view.state)) || !options.uploadImage) {
             return false;
           }
 
           // filter to only include image files
-          const files = getDataTransferFiles(event).filter(file =>
-            /image/i.test(file.type)
-          );
+          const files = getDataTransferFiles(event).filter(file => /image/i.test(file.type));
           if (files.length === 0) {
             return false;
           }
@@ -137,6 +128,12 @@ export default class Image extends Node {
         title: {
           default: null,
         },
+        width: {
+          default: null,
+        },
+        height: {
+          default: null,
+        },
       },
       content: 'text*',
       marks: '',
@@ -149,16 +146,15 @@ export default class Image extends Node {
           getAttrs: (dom: HTMLDivElement) => {
             const img = dom.getElementsByTagName('img')[0];
             const className = dom.className;
-            const layoutClassMatched =
-              className && className.match(/image-(.*)$/);
-            const layoutClass = layoutClassMatched
-              ? layoutClassMatched[1]
-              : null;
+            const layoutClassMatched = className && className.match(/image-(.*)$/);
+            const layoutClass = layoutClassMatched ? layoutClassMatched[1] : null;
             return {
               src: img?.getAttribute('src'),
               alt: img?.getAttribute('alt'),
               title: img?.getAttribute('title'),
               layoutClass: layoutClass,
+              width: img?.getAttribute('width'),
+              height: img?.getAttribute('height'),
             };
           },
         },
@@ -169,6 +165,8 @@ export default class Image extends Node {
               src: dom.getAttribute('src'),
               alt: dom.getAttribute('alt'),
               title: dom.getAttribute('title'),
+              width: dom.getAttribute('width'),
+              height: dom.getAttribute('height'),
             };
           },
         },
@@ -199,9 +197,7 @@ export default class Image extends Node {
 
         const { view } = this.editor;
         const $pos = view.state.doc.resolve(getPos() + node.nodeSize);
-        view.dispatch(
-          view.state.tr.setSelection(new TextSelection($pos)).split($pos.pos)
-        );
+        view.dispatch(view.state.tr.setSelection(new TextSelection($pos)).split($pos.pos));
         view.focus();
         return;
       }
@@ -222,7 +218,7 @@ export default class Image extends Node {
     ({ node, getPos }) =>
     event => {
       const alt = event.target.innerText;
-      const { src, title, layoutClass } = node.attrs;
+      const { src, title, layoutClass, width, height } = node.attrs;
 
       if (alt === node.attrs.alt) return;
 
@@ -236,6 +232,8 @@ export default class Image extends Node {
         alt,
         title,
         layoutClass,
+        width,
+        height,
       });
       view.dispatch(transaction);
     };
@@ -259,9 +257,82 @@ export default class Image extends Node {
       downloadImageNode(node);
     };
 
+  handleMouseDown =
+    ({ getPos, node }) =>
+    event => {
+      if (event.target.classList.contains('image-resize-handle')) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const handle = event.target;
+        const handleType = handle.getAttribute('data-type');
+        const startX = event.pageX;
+        const startY = event.pageY;
+        // Get the actual image element to read its size
+        const imgElement = event.target.parentElement.querySelector('img');
+        const startWidth = node.attrs.width || imgElement.clientWidth;
+        const startHeight = node.attrs.height || imgElement.clientHeight;
+        const aspectRatio = startWidth / startHeight;
+
+        const onMouseMove = e => {
+          const deltaX = e.pageX - startX;
+          const deltaY = e.pageY - startY;
+
+          let newWidth = startWidth;
+          let newHeight = startHeight;
+
+          switch (handleType) {
+            case 'se':
+              // Bottom-right: resize based on X or Y, whichever is larger
+              const deltaRight = Math.max(Math.abs(deltaX), Math.abs(deltaY));
+              newWidth = startWidth + (deltaX > 0 ? deltaRight : -deltaRight);
+              newHeight = newWidth / aspectRatio;
+              break;
+            case 'sw':
+              // Bottom-left
+              newWidth = startWidth - deltaX;
+              newHeight = newWidth / aspectRatio;
+              break;
+            case 'ne':
+              // Top-right
+              newWidth = startWidth + deltaX;
+              newHeight = newWidth / aspectRatio;
+              break;
+            case 'nw':
+              // Top-left
+              newWidth = startWidth - deltaX;
+              newHeight = newWidth / aspectRatio;
+              break;
+          }
+
+          // Allow minimum 50px, no maximum limit
+          newWidth = Math.max(50, newWidth);
+          newHeight = Math.max(50, newHeight);
+
+          const { view } = this.editor;
+          const { tr } = view.state;
+          const pos = getPos();
+          const transaction = tr.setNodeMarkup(pos, undefined, {
+            ...node.attrs,
+            width: Math.round(newWidth),
+            height: Math.round(newHeight),
+          });
+          view.dispatch(transaction);
+        };
+
+        const onMouseUp = () => {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      }
+    };
+
   component = props => {
     const { theme, isSelected } = props;
-    const { alt, src, title, layoutClass } = props.node.attrs;
+    const { alt, src, title, layoutClass, width, height } = props.node.attrs;
     const className = layoutClass ? `image image-${layoutClass}` : 'image';
 
     return (
@@ -269,20 +340,31 @@ export default class Image extends Node {
         <ImageWrapper
           className={isSelected ? 'ProseMirror-selectednode' : ''}
           onClick={this.handleSelect(props)}
+          onMouseDown={this.handleMouseDown(props)}
         >
           <Button>
-            <DownloadIcon
-              color="currentColor"
-              onClick={this.handleDownload(props)}
-            />
+            <DownloadIcon color="currentColor" onClick={this.handleDownload(props)} />
           </Button>
           <ImageZoom
-            image={{ src, alt, title }}
+            image={{
+              src,
+              alt,
+              title,
+              style: width ? { width: `${width}px`, height: `${height}px` } : undefined,
+            }}
             defaultStyles={{
               overlay: { backgroundColor: theme.background },
             }}
-            shouldRespectMaxDimension
+            shouldRespectMaxDimension={false}
           />
+          {isSelected && (
+            <>
+              <ResizeHandle data-type="nw" className="image-resize-handle nw" />
+              <ResizeHandle data-type="ne" className="image-resize-handle ne" />
+              <ResizeHandle data-type="sw" className="image-resize-handle sw" />
+              <ResizeHandle data-type="se" className="image-resize-handle se" />
+            </>
+          )}
         </ImageWrapper>
         <Caption
           onKeyDown={this.handleKeyDown(props)}
@@ -365,14 +447,20 @@ export default class Image extends Node {
         dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
         return true;
       },
+      resetImageSize: () => (state, dispatch) => {
+        const attrs = {
+          ...state.selection.node.attrs,
+          width: null,
+          height: null,
+        };
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.from, undefined, attrs));
+        return true;
+      },
       replaceImage: () => state => {
         const { view } = this.editor;
-        const {
-          uploadImage,
-          onImageUploadStart,
-          onImageUploadStop,
-          onShowToast,
-        } = this.editor.props;
+        const { uploadImage, onImageUploadStart, onImageUploadStop, onShowToast } =
+          this.editor.props;
 
         if (!uploadImage) {
           throw new Error('uploadImage prop is required to replace images');
@@ -403,9 +491,7 @@ export default class Image extends Node {
       },
       createImage: attrs => (state, dispatch) => {
         const { selection } = state;
-        const position = selection.$cursor
-          ? selection.$cursor.pos
-          : selection.$to.pos;
+        const position = selection.$cursor ? selection.$cursor.pos : selection.$to.pos;
         const node = type.create(attrs);
         const transaction = state.tr.insert(position, node);
         dispatch(transaction);
@@ -428,7 +514,7 @@ export default class Image extends Node {
               src,
               alt,
               ...getLayoutAndTitle(matchedTitle),
-            })
+            }),
           );
         }
 
@@ -441,6 +527,46 @@ export default class Image extends Node {
     return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
+
+const ResizeHandle = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: ${props => props.theme.primary || '#667eea'};
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+
+  &.nw {
+    top: -5px;
+    left: -5px;
+    cursor: nw-resize;
+  }
+
+  &.ne {
+    top: -5px;
+    right: -5px;
+    cursor: ne-resize;
+  }
+
+  &.sw {
+    bottom: -5px;
+    left: -5px;
+    cursor: sw-resize;
+  }
+
+  &.se {
+    bottom: -5px;
+    right: -5px;
+    cursor: se-resize;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+  }
+`;
 
 const Button = styled.button`
   position: absolute;
@@ -458,6 +584,7 @@ const Button = styled.button`
   cursor: pointer;
   opacity: 0;
   transition: opacity 100ms ease-in-out;
+  z-index: 11;
 
   &:active {
     transform: scale(0.98);
@@ -510,5 +637,10 @@ const ImageWrapper = styled.span`
 
   &.ProseMirror-selectednode + ${Caption} {
     visibility: visible;
+  }
+
+  &.ProseMirror-selectednode {
+    outline: 2px solid ${props => props.theme.primary || '#667eea'};
+    outline-offset: 2px;
   }
 `;
