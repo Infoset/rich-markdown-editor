@@ -17,6 +17,12 @@ export default class Image extends Node {
             title: {
                 default: null;
             };
+            width: {
+                default: null;
+            };
+            height: {
+                default: null;
+            };
         };
         content: string;
         marks: string;
@@ -29,6 +35,8 @@ export default class Image extends Node {
                 src: string | null;
                 alt: string | null;
                 title: string | null;
+                width: string | null;
+                height: string | null;
             };
         }[];
         toDOM: (node: any) => (string | any[] | {
@@ -47,6 +55,10 @@ export default class Image extends Node {
         getPos: any;
     }) => (event: any) => void;
     handleDownload: ({ node }: {
+        node: any;
+    }) => (event: any) => void;
+    handleMouseDown: ({ getPos, node }: {
+        getPos: any;
         node: any;
     }) => (event: any) => void;
     component: (props: any) => JSX.Element;
@@ -77,6 +89,7 @@ export default class Image extends Node {
         deleteImage: () => (state: any, dispatch: any) => boolean;
         alignRight: () => (state: any, dispatch: any) => boolean;
         alignLeft: () => (state: any, dispatch: any) => boolean;
+        resetImageSize: () => (state: any, dispatch: any) => boolean;
         replaceImage: () => (state: any) => void;
         alignCenter: () => (state: any, dispatch: any) => boolean;
         createImage: (attrs: any) => (state: any, dispatch: any) => boolean;
